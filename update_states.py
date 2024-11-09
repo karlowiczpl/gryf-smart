@@ -1,0 +1,37 @@
+import asyncio
+
+from .send import send_command
+
+module_count = None
+enable = True
+
+async def setup_update_states(module):
+    global module_count
+
+    module_count = module
+    await asyncio.sleep(3)
+
+    for i in range(1, int(module_count) + 1):
+            command = f"AT+StanOUT={i}"
+            send_command(command)
+            await asyncio.sleep(0.1)
+
+            command = f"AT+StanIN={i}"
+            send_command(command)
+            enable = False
+
+            await asyncio.sleep(0.1)
+
+async def update_states():
+    send_entity_states()
+    # module_count = 9
+    # for i in range(1, int(module_count) + 1):
+    #         command = f"AT+StanOUT={i}"
+    #         send_command(command)
+    #         await asyncio.sleep(0.1)
+
+    #         command = f"AT+StanIN={i}"
+    #         send_command(command)
+    #         enable = False
+
+    #         await asyncio.sleep(0.1)

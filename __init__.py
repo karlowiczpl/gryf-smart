@@ -19,6 +19,7 @@ from .update_states import setup_update_states
 import logging
 
 first = True
+conf = None
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ async def sensor_state_changed(event):
     
     if first:
         first = False
-        await setup_update_states(9)
+        await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0))
 
 
     if str(parts[1]) == "O":
@@ -106,6 +107,9 @@ async def sensor_state_changed(event):
 
 
 async def async_setup(hass: HomeAssistant, config: dict):
+    global conf
+
+    conf = config
 
     if DOMAIN not in config:
         return True

@@ -31,9 +31,12 @@ class Climate(ClimateEntity, RestoreEntity):
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
         if (last_state := await self.async_get_last_state()) is not None:
-            self._target_temperature = last_state.attributes.get("target_temperature", CLIMATE_START_TARGET_TEMPERATURE)
-            self._hvac_mode = last_state.attributes.get("hvac_mode", DEFAULT_HAVAC_MODE)
+            
+            self._target_temperature = last_state.attributes.get(ATTR_TEMPERATURE, CLIMATE_START_TARGET_TEMPERATURE)
+            self._hvac_mode = last_state.state if last_state.state in self.hvac_modes else DEFAULT_HAVAC_MODE
             self._hvac_action = last_state.attributes.get("hvac_action", DEFAULT_HAVAC_ACTION)
+
+        self.async_write_ha_state()
 
     async def set_new_state(self, state):
         self._temperature = float(state)

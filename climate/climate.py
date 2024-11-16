@@ -116,12 +116,12 @@ class Climate(ClimateEntity, RestoreEntity):
 
     async def update(self):
         if self._hvac_mode == HVACMode.HEAT:
-            states = ["0"] * (6 if self._o_id < 7 else 8)
+            states = ["0"] * (6 if self._o_pin < 7 else 8)
             states[self._o_pin - 1] = "1" if self._temperature < self._target_temperature else "2"
             command = f"AT+SetOut={self._o_id},{','.join(states)}"
             send_command(command)
         elif self._hvac_mode == HVACMode.OFF:
-            states = ["0"] * (6 if self._o_id < 7 else 8)
+            states = ["0"] * (6 if self._o_pin < 7 else 8)
             states[self._o_pin - 1] = "2"
             command = f"AT+SetOut={self._o_id},{','.join(states)}"
             send_command(command)

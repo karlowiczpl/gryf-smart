@@ -29,6 +29,7 @@ CONF_T_PIN = "t_pin"
 CONF_O_PIN = "o_pin"
 CONF_ID_COUNT = "id"
 CONF_GATE = "gate"
+CONF_P_COVER = "p_covers"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +60,7 @@ CONFIG_SCHEMA = vol.Schema({
         vol.Optional(CONF_WINDOW): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_TEMPERATURE): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_COVER): vol.All(cv.ensure_list, [COVER_SCHEMA]),
+        vol.Optional(CONF_P_COVER): vol.All(cv.ensure_list, [COVER_SCHEMA]),
         vol.Optional(CONF_LOCK): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_PWM): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_GATE): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
@@ -125,16 +127,18 @@ async def async_setup(hass: HomeAssistant, config: dict):
     pwm_config = config[DOMAIN].get(CONF_PWM , [])
     climate_config = config[DOMAIN].get(CONF_CLIMATE , [])
     gate_config = config[DOMAIN].get(CONF_GATE , [])
+    p_cover_config = config[DOMAIN].get(CONF_P_COVER , [])
 
     setup_serial(port_config)
     sensor_config = [buttons_config , port_config , temperature_config]
     binary_sensor_config = [doors_config , window_config]
     switch_config = [lights_config , lock_conf , port_config , gate_config]
+    cover_conf = [cover_config , p_cover_config]
 
     await hass.helpers.discovery.async_load_platform('sensor', DOMAIN, sensor_config, config)
     await hass.helpers.discovery.async_load_platform('binary_sensor', DOMAIN, binary_sensor_config , config)
     await hass.helpers.discovery.async_load_platform('switch', DOMAIN, switch_config , config)
-    await hass.helpers.discovery.async_load_platform('cover', DOMAIN, cover_config , config)
+    await hass.helpers.discovery.async_load_platform('cover', DOMAIN, cover_conf , config)
     await hass.helpers.discovery.async_load_platform('number', DOMAIN, pwm_config , config)
     await hass.helpers.discovery.async_load_platform('climate', DOMAIN, climate_config , config)
 

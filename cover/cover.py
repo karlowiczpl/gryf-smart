@@ -20,10 +20,8 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         self._time = time
 
     async def async_added_to_hass(self):
-        """Restore last state upon startup."""
         await super().async_added_to_hass()
         if (last_state := await self.async_get_last_state()) is not None:
-            # Restore position, state, and opening/closing flags
             self._position = last_state.attributes.get("position", self._position)
             self._state = last_state.state if last_state.state in [STATE_OPEN, STATE_CLOSED, STATE_OPENING, STATE_CLOSING] else self._state
             self._is_opening = last_state.attributes.get("is_opening", self._is_opening)
@@ -35,24 +33,12 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         return self._name
 
     @property
-    def current_cover_position(self):
-        return self._position
-
-    @property
     def is_opening(self):
         return self._is_opening
 
     @property
     def is_closing(self):
         return self._is_closing
-
-    @property
-    def get_id(self):
-        return self._id
-
-    @property
-    def get_pin(self):
-        return self._pin
 
     @property
     def is_closed(self):
@@ -62,6 +48,18 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
     def device_class(self):
         return CoverDeviceClass.SHUTTER
 
+    @property
+    def state(self):
+        return self._state
+
+    @property
+    def get_id(self):
+        return self._id
+
+    @property
+    def get_pin(self):
+        return self._pin
+
     async def changeRolState(self, parsed_states):
         if parsed_states[self._pin] == "0":
             if self._is_opening:
@@ -69,7 +67,7 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
             elif self._is_closing:
                 self._state = STATE_CLOSED
             elif self._state != STATE_OPEN and self._state != STATE_CLOSED:
-                self._state = None  # For paused state
+                self._state = None  
             self._is_opening = False
             self._is_closing = False
 
@@ -117,30 +115,3 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         command = f"AT+SetRol={self._id},0,{states[0]},{states[1]},{states[2]},{states[3]},{control}"
         send_command(command)
         self.schedule_update_ha_state()
-
-    def set_cover_position(self, position, **kwargs):
-        pos = abs(self.position - position)
-        pos = self._time * (100 / pos)
-
-        if self.position > position:
-            states = [0, 0, 0, 0]
-            states[self._pin - 1] = 2
-        else:
-            states = [0, 0, 0, 0]
-            states[self._pin - 1] = 1
-
-        t1 = pos
-        control = self._id + t1 + sum(states)
-        command = f"AT+SetRol={self._id},{t1},{states[0]},{states[1]},{states[2]},{states[3]},{control}"
-        send_command(command)
-
-        self._position = position
-        self.schedule_update_ha_state()
-
-    @property
-    def position(self):
-        return self._position
-
-    @property
-    def state(self):
-        return self._state

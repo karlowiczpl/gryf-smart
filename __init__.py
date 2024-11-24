@@ -8,15 +8,13 @@ import logging
 
 from .sensor import input_state_relaod , ps_state_reload , pl_state_reload , temp_reload
 from .binary_sensor import updateAllStates
-from .switch import new_switch_command
+from .switch import new_switch_command, reset_switch
 from .cover import new_rols_command
 from .send import setup_serial
 from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE
 from .climate import new_climate_temp , new_climate_out
 
 from .update_states import setup_update_states
-
-import logging
 
 first = True
 conf = None
@@ -107,6 +105,12 @@ async def sensor_state_changed(event):
     if str(parts[1]) == "R":
         await new_rols_command(parsed_states)
 
+async def reset_event(event):
+    data = event.data.get('new_state')
+    if data:
+        state = data.state
+        if state == "on":
+            await reset_switch()
 
 async def async_setup(hass: HomeAssistant, config: dict):
     global conf
@@ -143,5 +147,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
     await hass.helpers.discovery.async_load_platform('climate', DOMAIN, climate_config , config)
 
     async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
+    async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
 
     return True

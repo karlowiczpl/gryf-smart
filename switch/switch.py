@@ -26,6 +26,14 @@ class Switch(SwitchEntity , RestoreEntity):
         return self._name
 
     @property
+    def get_pin(self):
+        return self._pin
+
+    @property
+    def get_id(self):
+        return self._id
+
+    @property
     def is_on(self):
         """returning entity state"""
         return self._is_on
@@ -46,10 +54,10 @@ class Switch(SwitchEntity , RestoreEntity):
         await self.create_command("3")
 
     async def send_our_state(self):
-        if self._state == "on":
+        if self.state == "on":
             await self.create_command("1")
         else:
-            await self.send_command("0")
+            await self.create_command("0")
 
     async def create_command(self , state):
         """creating and sending command"""

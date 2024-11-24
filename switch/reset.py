@@ -52,7 +52,7 @@ class ResetEntity(SwitchEntity , RestoreEntity):
 
         self._is_on = 0
         self.async_write_ha_state()
-        await update_states()
+        # await update_states()
 
     async def async_turn_off(self, **kwargs):
         pass
@@ -64,11 +64,4 @@ class ResetEntity(SwitchEntity , RestoreEntity):
         pass
 
     async def create_command(self , state):
-        """creating and sending command"""
-        if self._pin > 6:
-            states_list = ["0", "0", "0", "0", "0", "0" , "0" , "0"]
-        else:
-            states_list = ["0", "0", "0", "0", "0", "0"]
-        states_list[self._pin - 1] = state
-        command = f"AT+SetOut={self._id},{','.join(states_list)}"
-        send_command(command)
+        pass

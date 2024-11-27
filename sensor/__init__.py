@@ -2,8 +2,9 @@ from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 
 from .serial import SerialSensor
 from .sensor import Sensor , TemperaureSensor
+from .tcp_sensor import TCPClientSensor
 
-from ..send import setupPlatform
+from ..send import setupPlatform, set_tcp_client
 
 buttons = []
 temp = []
@@ -40,8 +41,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     global temp
 
     buttons_config = discovery_info[0] or []
-    port_config = discovery_info[1]
+    port_config = discovery_info[1] or None
     temperature_config = discovery_info[2] or []
+    ip_config = discovery_info[3] or None
 
     for button in buttons_config:
         name = button.get("name")
@@ -58,8 +60,15 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities(buttons)
     async_add_entities(temp)
 
-    port = port_config
-    sensor = SerialSensor(port)
+    sensor = None
+
+    if port_config != None:
+        sensor = SerialSensor(port_config)
+    elif ip_config != None:
+        sensor = TCPClientSensor(ip_config)
+        set_tcp_client(sensor)
+
+
     async_add_entities([sensor], True)
     hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, sensor.stop_serial_read)
     setupPlatform(async_add_entities)

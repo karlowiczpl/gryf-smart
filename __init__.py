@@ -28,6 +28,8 @@ CONF_O_PIN = "o_pin"
 CONF_ID_COUNT = "id"
 CONF_GATE = "gate"
 CONF_P_COVER = "p_covers"
+CONF_IP = "ip"
+CONF_STATES_UPDATE = "states_update"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,8 +65,10 @@ CONFIG_SCHEMA = vol.Schema({
         vol.Optional(CONF_PWM): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_GATE): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
         vol.Optional(CONF_CLIMATE): vol.All(cv.ensure_list, [CLIMATE_SCHEMA]),
-        vol.Required(CONF_SERIAL): cv.string,
+        vol.Optional(CONF_SERIAL): cv.string,
+        vol.Optional(CONF_IP): cv.string,
         vol.Optional(CONF_ID_COUNT): cv.positive_int,
+        vol.Optional(CONF_STATES_UPDATE): cv.positive_int,
     })
 }, extra=vol.ALLOW_EXTRA)
 
@@ -81,7 +85,7 @@ async def sensor_state_changed(event):
     
     if first:
         first = False
-        await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0))
+        await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
 
 
     if str(parts[1]) == "O":
@@ -124,7 +128,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     buttons_config = config[DOMAIN].get(CONF_BUTTON, [])
     doors_config = config[DOMAIN].get(CONF_DOORS, [])
     window_config = config[DOMAIN].get(CONF_WINDOW, [])
-    port_config = config[DOMAIN].get(CONF_SERIAL, [])
+    port_config = config[DOMAIN].get(CONF_SERIAL, None)
     temperature_config = config[DOMAIN].get(CONF_TEMPERATURE , [])
     cover_config = config[DOMAIN].get(CONF_COVER , [])
     lock_conf = config[DOMAIN].get(CONF_LOCK , [])
@@ -132,9 +136,10 @@ async def async_setup(hass: HomeAssistant, config: dict):
     climate_config = config[DOMAIN].get(CONF_CLIMATE , [])
     gate_config = config[DOMAIN].get(CONF_GATE , [])
     p_cover_config = config[DOMAIN].get(CONF_P_COVER , [])
+    ip_config = config[DOMAIN].get(CONF_IP , None)
 
     setup_serial(port_config)
-    sensor_config = [buttons_config , port_config , temperature_config]
+    sensor_config = [buttons_config , port_config , temperature_config , ip_config]
     binary_sensor_config = [doors_config , window_config]
     switch_config = [lights_config , lock_conf , port_config , gate_config]
     cover_conf = [cover_config , p_cover_config]

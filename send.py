@@ -1,10 +1,18 @@
 import serial
+import logging
 from homeassistant.components.sensor import SensorEntity
 
 from .const import BAUDRATE , GRYF_OUT_NAME
 
+_LOGGER = logging.getLogger(__name__)
+
 ser = None
 sensorEntity = []
+tcp_client = None
+
+def set_tcp_client(tcp):
+    global tcp_client
+    tcp_client = tcp
 
 def setupPlatform(async_add_entities):
     global sensorEntity
@@ -19,13 +27,16 @@ def setup_serial(port):
     ser = serial.Serial(port, BAUDRATE, timeout=1)
 
 def send_command(command):
+    full_command = command + "\r\n"
+    _LOGGER.debug("Logger: %s", command)
     if ser: 
-            try:
-                full_command = command + "\r\n"
-                ser.write(full_command.encode('utf-8'))
-                sensorEntity[0].set_new_state(command)
-            except Exception as e:
-                print(f"Error sending command: {e}")
+        try:
+            ser.write(full_command.encode('utf-8'))
+            sensorEntity[0].set_new_state(command)
+        except Exception as e:
+            print(f"Error sending command: {e}")
+    if tcp_client:
+        tcp_client.send_data(full_command)
 
 class SendSensor(SensorEntity):
 

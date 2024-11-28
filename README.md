@@ -85,37 +85,94 @@ gryf_smart:
 
 ## 3. Schematy konfiguracji - schamaty dla każdego typu są określone w tabelce
 
-### 3.1 Klasyczny
+
+### 3.1 Zasady
+
+- W nazwię dopuszcza sie wielkie litery, cyfry, spacje, ale nie dopuszcza znaków specjalnych poza "_"
+- Do podania parametrów nie używamy żadnych nawiasów
+- bardzo ważna jest składnia i dobra ilość spacji
+- Całą konfigurację zapisujemy w pliku configuration.yaml pod kluczem 'gryf_smart:'
+- Klucz 'gryf_smart:' można wpisać tylko raz
+
+### 3.2 Klasyczny
 
 ```yaml
 gryf_smart:   
     lights: 
-        -   name: Przykładowa lampa   //Przykładowa nazwa lampy, dopuszcza liczby spacje i duże litery, bez znaków specjalnych
-            pin: 1    //Numer wyjścia/wejścia sterownika
-            id: 1   //Numer ID sterownika
+        -   name: Przykładowa lampa   #Przykładowa nazwa
+            pin: 1    #Numer wyjścia/wejścia sterownika
+            id: 1   #Numer ID sterownika
 ```
-### 3.2 Roletowy
+### 3.3 Roletowy
 
 ```yaml
 gryf_smart:   
     p_cover: 
-        -   name: Przykładowa lampa   //Przykładowa nazwa lampy, dopuszcza liczby spacje i duże litery, bez znaków specjalnych
-            pin: 1    //Numer wyjścia/wejścia sterownika
-            id: 1   //Numer ID sterownika
-            time: 100   //Czas pełnego otwarcia *10ms
+        -   name: Przykładowa lampa   #Przykładowa nazwa
+            pin: 1    #Numer wyjścia/wejścia sterownika
+            id: 1   #Numer ID sterownika
+            time: 100   #Czas pełnego otwarcia *10ms
 ```
-### 3.3 Regulator
+### 3.4 Regulator
 
 ```yaml
 gryf_smart:   
     p_cover: 
-        -   name: Przykładowa lampa   //Przykładowa nazwa lampy, dopuszcza liczby spacje i duże litery, bez znaków specjalnych
-            t_pin: 1    //Numer wejścia temperaturowgo
-            t_id: 1   //Numer ID sterownika wejścia temperaturowego
-            p_pin: 1    //Numer wyjścia przekaźnikowego
-            p_id: 1   //Numer ID sterownika wyjścia przekażnikowego
+        -   name: Przykładowa roleta   #Przykładowa nazwa
+            t_pin: 1    #Numer wejścia temperaturowgo
+            t_id: 1   #Numer ID sterownika wejścia temperaturowego
+            p_pin: 1    #Numer wyjścia przekaźnikowego
+            p_id: 1   #Numer ID sterownika wyjścia przekażnikowego
 ```
 
+## 4. Instalacja
+
+### 4.1 Kroki
+
+- Wymagany jest dostęp do terminala home assistant
+- Wpisujemy komendę
+
+```bash
+mkdir -p ~/config/custom_components && git clone git@github.com:karlowiczpl/gryf-smart.git ~/config/custom_components
+```
+- Po ponownym uruchomieniu integracja gryf smart powinna być zainstalowana
+
+## 5. Przykładowe drzewko konfiguracji
+
+```yaml
+gryf_smart:
+    port: "/dev/ttyS0"    #Adres portu RS-232
+    id: 10    #Ilość sterowników w sieci
+    states_update: True   #włączone aktualizowanie stanów
+    lights:   #elementy klasy lights
+        -   name: Lampa Salon     
+            pin: 1
+            id: 1
+        -   name: Lampa Kuchnia    
+            pin: 2
+            id: 8
+    buttons:    #element klasy buttons
+        -   name: Panel salon 1  
+            pin: 1
+            id: 7
+    p_covers:   #elementy klasy p_covers
+        -   name: Roleta Kuchnia
+            pin: 3
+            id: 6
+            time: 100   #odpowiada to 10 sekundą
+    climate:    #elementy klasy climate
+        -   name: Regulator
+            t_pin: 1
+            t_id: 10
+            p_pin: 3
+            p_id: 4
+
+```
+## 6. Dokładny opis wybranych typów
+
+### 6.1 Gate
+
+- Po załączeniu akcją turn_on załączy wyjście przekaźnikowe na 1 s a następnie je wyłączy
 
 
 

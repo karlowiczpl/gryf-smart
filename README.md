@@ -133,7 +133,7 @@ gryf_smart:
 - Wpisujemy komendę
 
 ```bash
-mkdir -p ~/config/custom_components && git clone git@github.com:karlowiczpl/gryf-smart.git ~/config/custom_components
+mkdir -p ~/config/custom_components && git clone https://github.com/karlowiczpl/gryf-smart.git ~/config/custom_components
 ```
 - Po ponownym uruchomieniu integracja gryf smart powinna być zainstalowana
 

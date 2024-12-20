@@ -13,7 +13,7 @@ from .cover import new_rols_command
 from .send import setup_serial
 from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE
 from .climate import new_climate_temp , new_climate_out
-
+from .switch.gryf import tcp_send
 from .update_states import setup_update_states
 
 first = True
@@ -83,10 +83,13 @@ async def sensor_state_changed(event):
     last_state = parsed_states[-1].split(';')
     parsed_states[-1] = last_state[0]
     
+    new_data = f"{parts[1]}={','.join(parsed_states)}\n"
+
+    await tcp_send(new_data)
+    
     if first:
         first = False
         await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
-
 
     if str(parts[1]) == "O":
         await new_switch_command(parsed_states)

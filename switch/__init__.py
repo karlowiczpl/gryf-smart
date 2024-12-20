@@ -1,6 +1,8 @@
 from .switch import Switch
-from .related import LightEntity , LockEntity , GateEntity
+from .related import LightEntity , LockEntity , GateEntity , Connection_switch
 from .reset import ResetEntity
+from .gryf import setup
+
 from ..send import send_command
 from ..update_states import update_states
 
@@ -70,8 +72,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         switches.append(GateEntity(name, switch_id, pin))
 
     switches.append(ResetEntity("GRYF RST" , 0 , 0))
-
+    switches.append(Connection_switch("GRYF EXPERT" , 0 , 0))
     async_add_entities(switches)
+    
+    setup(hass)
 
 async def new_switch_command(parsed_states):
     if switches:

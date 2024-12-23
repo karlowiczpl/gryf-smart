@@ -30,7 +30,7 @@ class Pwm(NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Ustawia wartość PWM."""
         
-        command = f"AT+SetLED={self._id},{self._pin},{int(value)}"
+        command = f"SetLED={self._id},{self._pin},{int(value)}"
         send_command(command)
 
         self._attr_value = value

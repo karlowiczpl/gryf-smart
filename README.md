@@ -137,7 +137,7 @@ mkdir -p ~/config/custom_components && git clone https://github.com/karlowiczpl/
 ```
 
 ```bash
-rm -rf ~/config/custom_components && mkdir -p ~/config/custom_components && cd ~/config/custom_components && git clone https://github.com/karlowiczpl/gryf-smart.git
+cd /root/config/custom_components && git clone https://github.com/karlowiczpl/gryf-smart.git
 ```
 - Po ponownym uruchomieniu integracja gryf smart powinna być zainstalowana
 

@@ -117,12 +117,12 @@ gryf_smart:
 
 ```yaml
 gryf_smart:   
-    p_cover: 
+    climate: 
         -   name: Przykładowa roleta   #Przykładowa nazwa
             t_pin: 1    #Numer wejścia temperaturowgo
             t_id: 1   #Numer ID sterownika wejścia temperaturowego
-            p_pin: 1    #Numer wyjścia przekaźnikowego
-            p_id: 1   #Numer ID sterownika wyjścia przekażnikowego
+            o_pin: 1    #Numer wyjścia przekaźnikowego
+            o_id: 1   #Numer ID sterownika wyjścia przekażnikowego
 ```
 
 ## 4. Instalacja
@@ -168,8 +168,8 @@ gryf_smart:
         -   name: Regulator
             t_pin: 1
             t_id: 10
-            p_pin: 3
-            p_id: 4
+            o_pin: 3
+            o_id: 4
 
 ```
 ## 6. Dokładny opis wybranych typów

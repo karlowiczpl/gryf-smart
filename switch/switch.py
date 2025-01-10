@@ -24,7 +24,7 @@ class Switch(SwitchEntity , RestoreEntity , _GryfSmartEntityBase):
             self._is_on = int(states[self._pin])
             self.async_write_ha_state()
 
-    async def async_toggle(self, **kwargs):
+    async def async_toggle(self):
         self.create_command("3")
 
     def turn_on(self):

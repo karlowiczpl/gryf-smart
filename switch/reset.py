@@ -1,14 +1,12 @@
 import asyncio
-from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.components.switch import SwitchEntity
 
-from ..update_states import update_states
-from ..send import send_command
+from ..entity import _GryfSmartEntityBase
 
-from .switch import Switch
 from .const import RESET_ICON
 
-class ResetEntity(SwitchEntity , RestoreEntity):
+class ResetEntity(SwitchEntity , _GryfSmartEntityBase):
+
 
     def __init__(self, name, button_id, pin):
         """initialisation light and lock entity"""
@@ -17,37 +15,18 @@ class ResetEntity(SwitchEntity , RestoreEntity):
         self._id = button_id  
         self._pin = pin
 
-    async def async_added_to_hass(self):
-        """restoring last state."""
-        await super().async_added_to_hass()
-        if (last_state := await self.async_get_last_state()) is not None:
-            self._is_on = last_state.state == "on"
-
-    @property
-    def name(self):
-        """returning entity name"""
-        return self._name
-
-    @property
-    def is_on(self):
-        """returning entity state"""
-        return self._is_on
-
     @property
     def icon(self):
         """setting entity icon"""
         return RESET_ICON
 
-    async def feedback(self , states):
-        """update state using feedback"""
-        pass
-    async def async_turn_on(self, **kwargs):
+    async def async_turn_on(self):
 
         self._is_on = 1
         self.async_write_ha_state()
 
         command = "AT+RST=0"
-        send_command(command)
+        self.send_command(command)
         await asyncio.sleep(2)
 
         self._is_on = 0
@@ -58,10 +37,4 @@ class ResetEntity(SwitchEntity , RestoreEntity):
         pass
 
     async def async_toggle(self, **kwargs):
-        pass
-
-    async def send_our_state(self):
-        pass
-
-    async def create_command(self , state):
         pass

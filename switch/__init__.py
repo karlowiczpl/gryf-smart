@@ -73,8 +73,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         pin = gate.get("pin")
         switches.append(GateEntity(name, switch_id, pin))
 
-    switches.append(ResetEntity("GRYF RST" , 0 , 0))
-
+    async_add_entities([ResetEntity("GRYF RST" , 0 , 0)])
     async_add_entities(switches)
 
     # for item in light_config:

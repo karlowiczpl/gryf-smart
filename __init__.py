@@ -22,8 +22,6 @@ from .harmonogram import async_while , system_off
 first = True
 conf = None
 
-_LOGGER = logging.getLogger(__name__)
-
 CONF_T_ID = "t_id"
 CONF_O_ID = "o_id"
 CONF_T_PIN = "t_pin"
@@ -95,7 +93,6 @@ async def sensor_state_changed(event):
     if first:
         first = False
         await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
-        # await async_while(has)
 
 
     if str(parts[1]) == "O":

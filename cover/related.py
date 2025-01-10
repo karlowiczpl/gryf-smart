@@ -2,7 +2,6 @@ from homeassistant.components.cover import SUPPORT_SET_POSITION , ATTR_POSITION 
 from homeassistant.const import STATE_CLOSED, STATE_OPEN
 
 import asyncio
-
 from .cover import Cover
 
 from ..send import send_command

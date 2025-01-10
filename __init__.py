@@ -35,8 +35,6 @@ CONF_IP = "ip"
 CONF_STATES_UPDATE = "states_update"
 CONF_HARMONOGRAM = "harmonogram"
 
-_LOGGER = logging.getLogger(__name__)
-
 STANDARD_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,
     vol.Required(CONF_ID): cv.positive_int,
@@ -53,6 +51,7 @@ COVER_SCHEMA = vol.Schema({
     vol.Required(CONF_ID): cv.positive_int,
     vol.Required(CONF_PIN): cv.positive_int,
     vol.Required(CONF_TIME): cv.positive_int,
+    vol.Optional(CONF_HARMONOGRAM): cv.string,
 })
 CLIMATE_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,

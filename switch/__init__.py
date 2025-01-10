@@ -4,6 +4,7 @@ from .reset import ResetEntity
 from ..send import send_command
 from ..update_states import update_states
 from ..harmonogram import setup_date_time
+from ..const import CONF_NAME , CONF_PIN , CONF_ID , CONF_TIME
 
 import asyncio
 

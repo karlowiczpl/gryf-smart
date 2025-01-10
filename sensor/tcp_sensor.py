@@ -1,19 +1,14 @@
 import asyncio
 import logging
-import socket
-import voluptuous as vol
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import CONF_HOST, CONF_PORT
-from homeassistant.helpers import config_validation as cv
+from homeassistant.const import CONF_HOST
 
-PORT = 4510
+from .const import PORT
 
 _LOGGER = logging.getLogger(__name__)
 
 class TCPClientSensor(SensorEntity):
-    """Representation of a TCP Client sensor."""
-
     def __init__(self, host):
         self._host = host
         self._port = PORT
@@ -49,30 +44,17 @@ class TCPClientSensor(SensorEntity):
         if self._tcp_socket is None:
             _LOGGER.error("TCP connection is not established.")
             return
-
         try:
             writer = self._tcp_socket[1]
             writer.write(message.encode("utf-8"))
-            writer.flush()  # Używamy flush, aby wysłać dane natychmiastowo.
+            writer.flush()  
             _LOGGER.debug("Logger: %s", message)
         except Exception as e:
             _LOGGER.error("Error while sending data: %s", e)
 
-
     async def _connect_to_server(self):
-        # try:
-        #     _LOGGER.debug("Establishing new TCP connection to %s:%s", self._host, self._port)
-        #     self._tcp_socket = await asyncio.open_connection(self._host, self._port)
-        #     _LOGGER.info("Successfully connected to %s:%s", self._host, self._port)
-
-        #     self._client_task = asyncio.create_task(self._listen_for_data())
-        # except Exception as e:
-        #     _LOGGER.error("Failed to connect to %s:%s - %s", self._host, self._port, e)
-        #     self._state = "Connection Failed"
         self._tcp_socket = await asyncio.open_connection(self._host, self._port)
         self._client_task = asyncio.create_task(self._listen_for_data())
-
-
 
     async def _listen_for_data(self):
 
@@ -94,8 +76,6 @@ class TCPClientSensor(SensorEntity):
                 break
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
-    """Set up the TCP Client sensor."""
     host = config[CONF_HOST]
-    port = config[CONF_PORT]
 
-    add_entities([TCPClientSensor(host, port)], True)
+    add_entities([TCPClientSensor(host)], True)

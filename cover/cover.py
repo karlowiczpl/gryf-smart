@@ -36,10 +36,10 @@ class Cover(CoverEntity, RestoreEntity):
         return self._is_opening
 
     def turn_on(self):
-        await self.async_open_cover()
+        self.open_cover()
 
     def turn_off(self):
-        await self.async_close_cover()
+        self.close_cover()
     @property
     def is_closing(self):
         return self._is_closing

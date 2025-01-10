@@ -56,17 +56,18 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     light_config = discovery_info[0] or []
     lock_config = discovery_info[1] or []
-    port = discovery_info[2] or []
-    gate_config = discovery_info[3] or []
+    gate_config = discovery_info[2] or []
 
-    for light in light_config:
-        name = light.get("name")
-        switch_id = light.get("id")
-        pin = light.get("pin")
-        entity = LightEntity(name, switch_id, pin)
-        if light.get("harmonogram") is not None:
-            await setup_date_time(hass , name, entity , light.get("harmonogram"))
-        switches.append(entity)
+    await setup_entities(light_config , LightEntity , hass)
+
+    # for light in light_config:
+    #     name = light.get("name")
+    #     switch_id = light.get("id")
+    #     pin = light.get("pin")
+    #     entity = LightEntity(name, switch_id, pin)
+    #     if light.get("harmonogram") is not None:
+    #         await setup_date_time(hass , name, entity , light.get("harmonogram"))
+    #     switches.append(entity)
 
     for lock in lock_config:
         name = lock.get("name")

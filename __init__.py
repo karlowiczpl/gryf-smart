@@ -152,7 +152,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     setup_serial(port_config)
     sensor_config = [buttons_config , port_config , temperature_config , ip_config]
     binary_sensor_config = [doors_config , window_config]
-    switch_config = [lights_config , lock_conf , port_config , gate_config]
+    switch_config = [lights_config , lock_conf , gate_config]
     cover_conf = [cover_config , p_cover_config]
 
     await hass.helpers.discovery.async_load_platform('sensor', DOMAIN, sensor_config, config)

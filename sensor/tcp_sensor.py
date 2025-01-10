@@ -4,21 +4,19 @@ import logging
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST
 
-from .const import PORT , GRYF_IN_NAME 
-
 _LOGGER = logging.getLogger(__name__)
 
 class TCPClientSensor(SensorEntity):
     def __init__(self, host):
         self._host = host
-        self._port = PORT
+        self._port = 4510
         self._state = None
         self._client_task = None
         self._tcp_socket = None
 
     @property
     def name(self):
-        return GRYF_IN_NAME 
+        return "Gryf IN" 
 
     @property
     def native_value(self):

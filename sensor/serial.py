@@ -10,15 +10,13 @@ import serial_asyncio_fast as serial_asyncio
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import callback
 
-from .const import BAUDRATE, GRYF_IN_NAME
-
 _LOGGER = logging.getLogger(__name__)
 
 class SerialSensor(SensorEntity):
     _attr_should_poll = False
 
     def __init__(self, port):
-        self._name = GRYF_IN_NAME
+        self._name = "Gryf IN"
         self._state = None
         self._port = port
         self._serial_loop_task = None
@@ -54,7 +52,7 @@ class SerialSensor(SensorEntity):
                 _LOGGER.debug("Opening serial connection on %s", self._port)
                 reader, _ = await serial_asyncio.open_serial_connection(
                     url=self._port,
-                    baudrate=BAUDRATE,
+                    baudrate=115200,
                     bytesize=serial_asyncio.serial.EIGHTBITS,
                     parity=serial_asyncio.serial.PARITY_NONE,
                     stopbits=serial_asyncio.serial.STOPBITS_ONE,
@@ -98,7 +96,7 @@ class SerialSensor(SensorEntity):
 
     @property
     def name(self):
-        return GRYF_IN_NAME
+        return "Gryf IN"
 
     @property
     def native_value(self):

@@ -4,8 +4,8 @@
     "version": "1.0",
     "documentation": "https://github.com/karlowiczpl/gryf-smart",
     "requirements": ["pyserial-asyncio-fast==0.13"],
-    "codeowners": ["@karol_karlowski"],
+    "codeowners": ["@karlowiczpl"],
     "iot_class": "local_polling",
     "integration_type": "hub",
-    "supported_platforms": ["sensor", "calendar"]
+    "loggers": ["custom_components.gryf_smart"]
 }

@@ -42,7 +42,14 @@ async def reset_switch():
     
     await update_states()
 
+async def setup_entities(config , clas, hass):
+    global switches
 
+    for item in config:
+        entity = clas(item.get("name") , item.get("id") , item.get("pin"))
+        if item.get("harmonogram") is not None:
+            await setup_date_time(hass , item.get("name") , entity , item.get("harmonogram"))
+        switches.append(entity)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     global switches

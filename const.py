@@ -14,5 +14,6 @@ CONF_TIME = "time"
 CONF_LOCK = "lock"
 CONF_PWM = "pwm"
 CONF_CLIMATE = "climate"
+CONF_HARMONOGRAM = "harmonogram"
 
 COVER_DEVICE_CLASS = "window"

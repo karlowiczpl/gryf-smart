@@ -63,8 +63,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     await setup_entities(lock_config , LockEntity , hass)
     await setup_entities(gate_config , GateEntity , hass)
 
-    switches.append(ResetEntity("GRYF RST" , 0 , 0))
-
+    async_add_entities([ResetEntity("GRYF RST" , 0 , 0)])
     async_add_entities(switches)
 
 async def new_switch_command(parsed_states):

@@ -36,6 +36,8 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
     def is_opening(self):
         return self._is_opening
 
+    def turn_on(self):
+        self.async_open_cover()
     @property
     def is_closing(self):
         return self._is_closing
@@ -82,8 +84,13 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
             self._is_closing = False
 
         self.async_write_ha_state()
+    async def async_open_cover(self):
+        self.open_cover()
 
-    async def async_open_cover(self, **kwargs):
+    async def async_close_cover(self):
+        self.close_cover()
+
+    def open_cover(self, **kwargs):
         self._is_opening = True
         self._is_closing = False
         states = [0, 0, 0, 0]
@@ -94,7 +101,7 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         send_command(command)
         self.schedule_update_ha_state()
 
-    async def async_close_cover(self, **kwargs):
+    def close_cover(self, **kwargs):
         self._is_opening = False
         self._is_closing = True
         states = [0, 0, 0, 0]

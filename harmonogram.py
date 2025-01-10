@@ -8,7 +8,6 @@ from datetime import datetime
 System_on = True
 names = []
 ptrs = []
-_LOGGER = logging.getLogger(__name__)
 
 async def setup_date_time(hass, name: str, ptr , mode):
     global names

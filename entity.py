@@ -12,6 +12,13 @@ class _GryfSmartEntityBase(Entity):
     def get_pin(self):
         return self._pin
 
+    @property
+    def is_on(self):
+        return self._is_on
+
+    @property
+    def name(self):
+        return self._name;
     def send_command(self , command):
         send_command(command)
     
@@ -21,7 +28,7 @@ class _GryfSmartEntityBase(Entity):
     def async_turn_off(self):
         self.turn_off()
 
-    @property
-    def name(self):
-        return self._name;
+    def async_toggle(self):
+        self.toggle()
+ 
 

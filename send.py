@@ -62,4 +62,4 @@ class SendSensor(SensorEntity):
 
     def set_new_state(self, state) -> None:
         self._state = state
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()

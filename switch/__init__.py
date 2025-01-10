@@ -3,6 +3,7 @@ from .related import LightEntity , LockEntity , GateEntity
 from .reset import ResetEntity
 from ..send import send_command
 from ..update_states import update_states
+from ..harmonogram import setup_date_time
 
 import asyncio
 
@@ -55,7 +56,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         name = light.get("name")
         switch_id = light.get("id")
         pin = light.get("pin")
-        switches.append(LightEntity(name, switch_id, pin))
+        entity = LightEntity(name, switch_id, pin)
+        if light.get("harmonogram") is not None:
+            await setup_date_time(hass , name, entity , light.get("harmonogram"))
+        switches.append(entity)
 
     for lock in lock_config:
         name = lock.get("name")
@@ -72,6 +76,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     switches.append(ResetEntity("GRYF RST" , 0 , 0))
 
     async_add_entities(switches)
+
+    # for item in light_config:
+    #     if item.get("harmonogram") is not None:
+    #         await setup_date_time(hass , item.get("name"))
+
 
 async def new_switch_command(parsed_states):
     if switches:

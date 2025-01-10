@@ -45,13 +45,19 @@ class Switch(SwitchEntity , RestoreEntity):
             self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs):
-        await self.create_command("1")
+        self.create_command("1")
 
     async def async_turn_off(self, **kwargs):
-        await self.create_command("2")
+        self.create_command("2")
 
     async def async_toggle(self, **kwargs):
-        await self.create_command("3")
+        self.create_command("3")
+
+    def turn_on(self):
+        self.create_command("1")
+
+    def turn_off(self):
+        self.create_command("2")
 
     async def send_our_state(self):
         if self.state == "on":
@@ -59,7 +65,7 @@ class Switch(SwitchEntity , RestoreEntity):
         else:
             await self.create_command("0")
 
-    async def create_command(self , state):
+    def create_command(self , state):
         """creating and sending command"""
         if self._pin > 6:
             states_list = ["0", "0", "0", "0", "0", "0" , "0" , "0"]

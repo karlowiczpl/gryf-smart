@@ -1,6 +1,6 @@
-from .switch import Switch
 from .related import LightEntity , LockEntity , GateEntity
 from .reset import ResetEntity
+
 from ..send import send_command
 from ..update_states import update_states
 from ..harmonogram import setup_date_time
@@ -59,36 +59,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     gate_config = discovery_info[2] or []
 
     await setup_entities(light_config , LightEntity , hass)
-
-    # for light in light_config:
-    #     name = light.get("name")
-    #     switch_id = light.get("id")
-    #     pin = light.get("pin")
-    #     entity = LightEntity(name, switch_id, pin)
-    #     if light.get("harmonogram") is not None:
-    #         await setup_date_time(hass , name, entity , light.get("harmonogram"))
-    #     switches.append(entity)
-
-    for lock in lock_config:
-        name = lock.get("name")
-        switch_id = lock.get("id")
-        pin = lock.get("pin")
-        switches.append(LockEntity(name, switch_id, pin))
-
-    for gate in gate_config:
-        name = gate.get("name")
-        switch_id = gate.get("id")
-        pin = gate.get("pin")
-        switches.append(GateEntity(name, switch_id, pin))
+    await setup_entities(lock_config , LockEntity , hass)
+    await setup_entities(gate_config , GateEntity , hass)
 
     switches.append(ResetEntity("GRYF RST" , 0 , 0))
 
     async_add_entities(switches)
-
-    # for item in light_config:
-    #     if item.get("harmonogram") is not None:
-    #         await setup_date_time(hass , item.get("name"))
-
 
 async def new_switch_command(parsed_states):
     if switches:

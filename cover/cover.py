@@ -86,12 +86,6 @@ class Cover(CoverEntity, RestoreEntity):
             self._is_closing = False
 
         self.async_write_ha_state()
-    async def async_open_cover(self):
-        self.open_cover()
-
-    async def async_close_cover(self):
-        self.close_cover()
-
     def open_cover(self):
         self._is_opening = True
         self._is_closing = False
@@ -113,6 +107,12 @@ class Cover(CoverEntity, RestoreEntity):
         command = f"AT+SetRol={self._id},{t1},{states[0]},{states[1]},{states[2]},{states[3]},{control}"
         send_command(command)
         self.schedule_update_ha_state()
+
+    async def async_open_cover(self):
+        self.open_cover()
+
+    async def async_close_cover(self):
+        self.close_cover()
 
     async def async_stop_cover(self):
         self._is_opening = False

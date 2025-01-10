@@ -1,10 +1,12 @@
+from homeassistant.components.cover import SUPPORT_SET_POSITION , ATTR_POSITION , STATE_OPENING, STATE_CLOSING
+from homeassistant.const import STATE_CLOSED, STATE_OPEN
+
+import asyncio
+
 from .cover import Cover
 
 from ..send import send_command
 
-from homeassistant.components.cover import SUPPORT_SET_POSITION , ATTR_POSITION , STATE_OPENING, STATE_CLOSING
-from homeassistant.const import STATE_CLOSED, STATE_OPEN
-import asyncio
 
 class Ha_position_cover(Cover):
 

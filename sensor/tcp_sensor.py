@@ -4,7 +4,7 @@ import logging
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST
 
-from .const import PORT
+from .const import PORT , GRYF_IN_NAME 
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class TCPClientSensor(SensorEntity):
 
     @property
     def name(self):
-        return "GRYF IN"
+        return GRYF_IN_NAME 
 
     @property
     def native_value(self):

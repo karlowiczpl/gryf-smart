@@ -16,8 +16,3 @@ CONF_PWM = "pwm"
 CONF_CLIMATE = "climate"
 
 COVER_DEVICE_CLASS = "window"
-
-BAUDRATE = 115200
-
-GRYF_OUT_NAME = "Gryf OUT"
-GRYF_IN_NAME = "Gryf IN"

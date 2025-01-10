@@ -159,5 +159,5 @@ async def async_setup(hass: HomeAssistant, config: dict):
     async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
 
-    async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59)):
+    async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))
     system_off()

@@ -161,3 +161,5 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
     async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))
     system_off()
+
+    return True

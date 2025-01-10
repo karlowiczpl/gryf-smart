@@ -18,7 +18,6 @@ async def setup_update_states(module , interval):
 
             command = f"AT+StanIN={i}"
             send_command(command)
-            enable = False
 
             await asyncio.sleep(0.1)
 
@@ -31,7 +30,6 @@ async def setup_update_states(module , interval):
 
                 command = f"AT+StanIN={i}"
                 send_command(command)
-                enable = False
 
                 await asyncio.sleep(3)
 
@@ -44,6 +42,5 @@ async def update_states():
 
             command = f"AT+StanIN={i}"
             send_command(command)
-            enable = False
 
             await asyncio.sleep(0.1)

@@ -13,7 +13,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         name = cover.get("name")
         cover_id = cover.get("id")
         pin = cover.get("pin")
-        time = cover.get("time")
         covers.append(Pwm(name, cover_id, pin))
 
     async_add_entities(covers)
@@ -28,8 +27,6 @@ class Pwm(NumberEntity):
         self._id = pwm_id
 
     async def async_set_native_value(self, value: float) -> None:
-        """Ustawia wartość PWM."""
-        
         command = f"SetLED={self._id},{self._pin},{int(value)}"
         send_command(command)
 
@@ -38,5 +35,4 @@ class Pwm(NumberEntity):
 
     @property
     def native_value(self) -> float:
-        """Zwraca aktualną wartość PWM."""
         return self._attr_value

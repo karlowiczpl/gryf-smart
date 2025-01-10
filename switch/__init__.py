@@ -4,7 +4,7 @@ from .reset import ResetEntity
 from ..send import send_command
 from ..update_states import update_states
 from ..harmonogram import setup_date_time
-from ..const import CONF_NAME , CONF_PIN , CONF_ID , CONF_TIME
+from ..const import CONF_HARMONOGRAM, CONF_NAME , CONF_PIN , CONF_ID , CONF_TIME
 
 import asyncio
 
@@ -47,9 +47,9 @@ async def setup_entities(config , clas, hass):
     global switches
 
     for item in config:
-        entity = clas(item.get("name") , item.get("id") , item.get("pin"))
-        if item.get("harmonogram") is not None:
-            await setup_date_time(hass , item.get("name") , entity , item.get("harmonogram"))
+        entity = clas(item.get(CONF_NAME) , item.get(CONF_ID) , item.get(CONF_PIN))
+        if item.get(CONF_HARMONOGRAM) is not None:
+            await setup_date_time(hass , item.get(CONF_NAME) , entity , item.get(CONF_HARMONOGRAM))
         switches.append(entity)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):

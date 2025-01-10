@@ -4,9 +4,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.event import async_track_state_change_event , async_track_time_interval
 import voluptuous as vol
-import logging
 from datetime import timedelta
-from functools import partial
 
 from .sensor import input_state_relaod , ps_state_reload , pl_state_reload , temp_reload
 from .binary_sensor import updateAllStates
@@ -161,9 +159,5 @@ async def async_setup(hass: HomeAssistant, config: dict):
     async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
 
-    async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=1))
-
-    return True
-
-async def async_unload(hass):
+    async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59):
     system_off()

@@ -1,7 +1,5 @@
 from homeassistant.helpers.storage import Store
 import uuid
-import asyncio
-import logging
 from datetime import datetime
 
 
@@ -36,7 +34,6 @@ def async_while(hass):
         id = f"input_datetime.{name.replace(" ", "_").lower()}"
         on_state = hass.states.get(id + "_on")
         off_state = hass.states.get(id + "_off")
-        # _LOGGER.debug("Logger: %s and %s == %s and %s and %s", en_on_state.state , now.hour , on_state.attributes.get("hour", 0) , now.minute , on_state.attributes.get("minute", 0))
         if on_state is not None and now.hour == on_state.attributes.get("hour", 0) and now.minute == on_state.attributes.get("minute", 0) and en_on_state.state == "on":
             ptr.turn_on()
         if off_state is not None and now.hour == off_state.attributes.get("hour", 0) and now.minute == off_state.attributes.get("minute", 0) and en_off_state.state == "on":

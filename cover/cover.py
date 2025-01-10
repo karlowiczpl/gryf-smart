@@ -1,14 +1,13 @@
 from homeassistant.components.cover import CoverEntity
 from homeassistant.const import STATE_OPEN, STATE_CLOSED, STATE_OPENING, STATE_CLOSING
-from homeassistant.components.cover import CoverEntityFeature, CoverDeviceClass
-from homeassistant.helpers.restore_state import RestoreEntity  # Import RestoreEntity
+from homeassistant.components.cover import CoverDeviceClass
+from homeassistant.helpers.restore_state import RestoreEntity  
 
 from ..send import send_command
 import logging
 
-_LOGGER = logging.getLogger(__name__)
 
-class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
+class Cover(CoverEntity, RestoreEntity):  
     def __init__(self, name, cover_id, pin, time):
         self._name = name
         self._pin = pin
@@ -37,7 +36,10 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         return self._is_opening
 
     def turn_on(self):
-        self.async_open_cover()
+        await self.async_open_cover()
+
+    def turn_off(self):
+        await self.async_close_cover()
     @property
     def is_closing(self):
         return self._is_closing
@@ -90,7 +92,7 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
     async def async_close_cover(self):
         self.close_cover()
 
-    def open_cover(self, **kwargs):
+    def open_cover(self):
         self._is_opening = True
         self._is_closing = False
         states = [0, 0, 0, 0]
@@ -101,7 +103,7 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         send_command(command)
         self.schedule_update_ha_state()
 
-    def close_cover(self, **kwargs):
+    def close_cover(self):
         self._is_opening = False
         self._is_closing = True
         states = [0, 0, 0, 0]
@@ -112,7 +114,7 @@ class Cover(CoverEntity, RestoreEntity):  # Add RestoreEntity as a parent class
         send_command(command)
         self.schedule_update_ha_state()
 
-    async def async_stop_cover(self, **kwargs):
+    async def async_stop_cover(self):
         self._is_opening = False
         self._is_closing = False
         self._state = None

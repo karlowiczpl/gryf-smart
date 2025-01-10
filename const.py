@@ -14,10 +14,6 @@ CONF_TIME = "time"
 CONF_LOCK = "lock"
 CONF_PWM = "pwm"
 CONF_CLIMATE = "climate"
+CONF_HARMONOGRAM = "harmonogram"
 
 COVER_DEVICE_CLASS = "window"
-
-BAUDRATE = 115200
-
-GRYF_OUT_NAME = "Gryf OUT"
-GRYF_IN_NAME = "Gryf IN"

@@ -2,9 +2,9 @@
 
 from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.event import async_track_state_change_event , async_track_time_interval
 import voluptuous as vol
-import logging
+from datetime import timedelta
 
 from .sensor import input_state_relaod , ps_state_reload , pl_state_reload , temp_reload
 from .binary_sensor import updateAllStates
@@ -15,11 +15,10 @@ from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CO
 from .climate import new_climate_temp , new_climate_out
 
 from .update_states import setup_update_states
+from .harmonogram import async_while , system_off
 
 first = True
 conf = None
-
-_LOGGER = logging.getLogger(__name__)
 
 CONF_T_ID = "t_id"
 CONF_O_ID = "o_id"
@@ -30,10 +29,15 @@ CONF_GATE = "gate"
 CONF_P_COVER = "p_covers"
 CONF_IP = "ip"
 CONF_STATES_UPDATE = "states_update"
-
-_LOGGER = logging.getLogger(__name__)
+CONF_HARMONOGRAM = "harmonogram"
 
 STANDARD_SCHEMA = vol.Schema({
+    vol.Required(CONF_NAME): cv.string,
+    vol.Required(CONF_ID): cv.positive_int,
+    vol.Required(CONF_PIN): cv.positive_int,
+    vol.Optional(CONF_HARMONOGRAM): cv.string,
+})
+SENSOR_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,
     vol.Required(CONF_ID): cv.positive_int,
     vol.Required(CONF_PIN): cv.positive_int,
@@ -43,6 +47,7 @@ COVER_SCHEMA = vol.Schema({
     vol.Required(CONF_ID): cv.positive_int,
     vol.Required(CONF_PIN): cv.positive_int,
     vol.Required(CONF_TIME): cv.positive_int,
+    vol.Optional(CONF_HARMONOGRAM): cv.string,
 })
 CLIMATE_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,
@@ -55,10 +60,10 @@ CLIMATE_SCHEMA = vol.Schema({
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Optional(CONF_LIGHTS): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
-        vol.Optional(CONF_BUTTON): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
-        vol.Optional(CONF_DOORS): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
-        vol.Optional(CONF_WINDOW): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
-        vol.Optional(CONF_TEMPERATURE): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
+        vol.Optional(CONF_BUTTON): vol.All(cv.ensure_list, [SENSOR_SCHEMA]),
+        vol.Optional(CONF_DOORS): vol.All(cv.ensure_list, [SENSOR_SCHEMA]),
+        vol.Optional(CONF_WINDOW): vol.All(cv.ensure_list, [SENSOR_SCHEMA]),
+        vol.Optional(CONF_TEMPERATURE): vol.All(cv.ensure_list, [SENSOR_SCHEMA]),
         vol.Optional(CONF_COVER): vol.All(cv.ensure_list, [COVER_SCHEMA]),
         vol.Optional(CONF_P_COVER): vol.All(cv.ensure_list, [COVER_SCHEMA]),
         vol.Optional(CONF_LOCK): vol.All(cv.ensure_list, [STANDARD_SCHEMA]),
@@ -141,7 +146,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     setup_serial(port_config)
     sensor_config = [buttons_config , port_config , temperature_config , ip_config]
     binary_sensor_config = [doors_config , window_config]
-    switch_config = [lights_config , lock_conf , port_config , gate_config]
+    switch_config = [lights_config , lock_conf , gate_config]
     cover_conf = [cover_config , p_cover_config]
 
     await hass.helpers.discovery.async_load_platform('sensor', DOMAIN, sensor_config, config)
@@ -153,5 +158,8 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
     async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
+
+    async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))
+    system_off()
 
     return True

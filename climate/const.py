@@ -1,4 +1,4 @@
-from homeassistant.components.climate.const import HVACMode , HVACAction , ClimateEntityFeature
+from homeassistant.components.climate.const import HVACMode , HVACAction 
 
 CLIMATE_START_TEMPERATURE = 85
 CLIMATE_START_TARGET_TEMPERATURE = 20

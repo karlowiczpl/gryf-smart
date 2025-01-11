@@ -38,11 +38,15 @@ class Pwm(NumberEntity):
 
     def turn_on(self):
         command = f"SetLED={self._id},{self._pin},100"
+        self._attr_value = 100
         send_command(command)
+        self.schedule_update_ha_state()
 
     def turn_off(self):
         command = f"SetLED={self._id},{self._pin},0"
+        self._attr_value = 0
         send_command(command)
+        self.schedule_update_ha_state
 
     @property
     def native_value(self) -> float:

@@ -27,6 +27,9 @@ CONF_P_COVER = "p_covers"
 CONF_IP = "ip"
 CONF_STATES_UPDATE = "states_update"
 CONF_HARMONOGRAM = "harmonogram"
+CONF_ON = "on"
+CONF_OFF = "off"
+CONF_ALL = "all"
 
 COVER_DEVICE_CLASS = "window"
 DOOR_DEVICE_CLASS = "door"
@@ -41,3 +44,8 @@ CLIMATE_MAX_TEMP = 35
 
 DEFAULT_HAVAC_MODE = HVACMode.OFF
 DEFAULT_HAVAC_ACTION = HVACAction.IDLE
+
+HELPER_BOOLEAN_ON = "_en_on"
+HELPER_BOOLEAN_OFF = "_en_off"
+HELPER_DATETIME_ON = "_on"
+HELPER_DATETIME_OFF = "_off"

@@ -1,7 +1,9 @@
 from homeassistant.helpers.storage import Store
+
 import uuid
 from datetime import datetime
 
+from .const import HELPER_DATETIME_ON , HELPER_BOOLEAN_OFF , HELPER_BOOLEAN_ON , HELPER_BOOLEAN_OFF , CONF_ALL , CONF_ON , CONF_OFF
 
 System_on = True
 names = []
@@ -10,15 +12,15 @@ ptrs = []
 async def setup_date_time(hass, name: str, ptr , mode):
     global names
     global ptrs
-    if mode == "all":
-        await create_enable_button(hass , name + "_en_on")
-        await create_enable_button(hass , name + "_en_off")
+    if mode == CONF_ALL:
+        await create_enable_button(hass , name + HELPER_BOOLEAN_ON)
+        await create_enable_button(hass , name + HELPER_BOOLEAN_OFF)
         await create_time(hass , name , 2)
-    elif mode == "on":
-        await create_enable_button(hass , name + "_en_on")
+    elif mode == CONF_ON:
+        await create_enable_button(hass , name + HELPER_BOOLEAN_ON)
         await create_time(hass , name , 0)
-    elif mode == "off":
-        await create_enable_button(hass , name + "_en_off")
+    elif mode == CONF_OFF:
+        await create_enable_button(hass , name + HELPER_BOOLEAN_OFF)
         await create_time(hass , name , 1)
 
     names.append(name)
@@ -28,15 +30,15 @@ def async_while(hass):
     now = datetime.now()
     for name, ptr in zip(names, ptrs):
         id = f"input_boolean.{name.replace(" ", "_").lower()}"
-        en_on_state = hass.states.get(id + "_en_on")
-        en_off_state = hass.states.get(id + "_en_off")
+        en_on_state = hass.states.get(id + HELPER_BOOLEAN_ON)
+        en_off_state = hass.states.get(id + HELPER_BOOLEAN_OFF)
 
         id = f"input_datetime.{name.replace(" ", "_").lower()}"
-        on_state = hass.states.get(id + "_on")
-        off_state = hass.states.get(id + "_off")
-        if on_state is not None and now.hour == on_state.attributes.get("hour", 0) and now.minute == on_state.attributes.get("minute", 0) and en_on_state.state == "on":
+        on_state = hass.states.get(id + HELPER_DATETIME_ON)
+        off_state = hass.states.get(id + HELPER_BOOLEAN_OFF)
+        if on_state is not None and now.hour == on_state.attributes.get("hour", 0) and now.minute == on_state.attributes.get("minute", 0) and en_on_state.state == CONF_ON:
             ptr.turn_on()
-        if off_state is not None and now.hour == off_state.attributes.get("hour", 0) and now.minute == off_state.attributes.get("minute", 0) and en_off_state.state == "on":
+        if off_state is not None and now.hour == off_state.attributes.get("hour", 0) and now.minute == off_state.attributes.get("minute", 0) and en_off_state.state == CONF_ON:
             ptr.turn_off()
 
         

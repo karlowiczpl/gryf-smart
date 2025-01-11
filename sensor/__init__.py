@@ -46,16 +46,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     ip_config = discovery_info[3] or None
 
     for button in buttons_config:
-        name = button.get("name")
-        button_id = button.get("id")
-        pin = button.get("pin")
-        buttons.append(Sensor(hass, name, button_id, pin))
+        buttons.append(Sensor(button.get("name"), button.get("id"), button.get("pin")))
 
     for temperature in temperature_config:
-        name = temperature.get("name")
-        button_id = temperature.get("id")
-        pin = temperature.get("pin")
-        temp.append(TemperaureSensor(hass, name, button_id, pin))
+        temp.append(TemperaureSensor(temperature.get("name"), temperature.get("id"), temperature.get("pin")))
     
     async_add_entities(buttons)
     async_add_entities(temp)
@@ -71,4 +65,5 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     async_add_entities([sensor], True)
     hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, sensor.stop_serial_read)
+
     setupPlatform(async_add_entities)

@@ -101,6 +101,12 @@ class Climate(ClimateEntity, RestoreEntity):
     def max_temp(self):
         return self._max_temp
 
+    def turn_on(self):
+        self._hvac_action = HVACMode.HEAT
+
+    def turn_off(self):
+        self._hvac_action = HVACMode.OFF
+
     async def async_set_temperature(self, **kwargs):
         if ATTR_TEMPERATURE in kwargs:
             self._target_temperature = kwargs[ATTR_TEMPERATURE]

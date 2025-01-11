@@ -5,6 +5,7 @@ from .sensor import Sensor , TemperaureSensor
 from .tcp_sensor import TCPClientSensor
 
 from ..send import setupPlatform, set_tcp_client
+from ..const import CONF_NAME , CONF_ID , CONF_PIN
 
 buttons = []
 temp = []
@@ -46,10 +47,10 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     ip_config = discovery_info[3] or None
 
     for button in buttons_config:
-        buttons.append(Sensor(button.get("name"), button.get("id"), button.get("pin")))
+        buttons.append(Sensor(button.get(CONF_NAME), button.get(CONF_ID), button.get(CONF_PIN)))
 
     for temperature in temperature_config:
-        temp.append(TemperaureSensor(temperature.get("name"), temperature.get("id"), temperature.get("pin")))
+        temp.append(TemperaureSensor(temperature.get(CONF_NAME), temperature.get(CONF_ID), temperature.get(CONF_PIN)))
     
     async_add_entities(buttons)
     async_add_entities(temp)

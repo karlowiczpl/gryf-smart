@@ -1,12 +1,10 @@
 from .cover import Cover
 from .related import Ha_position_cover
 
-from ..const import CONF_ID, CONF_NAME, CONF_PIN, CONF_TIME, CONF_HARMONOGRAM
+from ..const import CONF_ID, CONF_NAME, CONF_PIN, CONF_TIME, CONF_HARMONOGRAM 
 from ..harmonogram import setup_date_time
 
 covers = []
-
-STATE_PAUSED = "zatrzymano"
 
 async def new_rols_command(parsed_states):
     if covers:

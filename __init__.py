@@ -10,7 +10,7 @@ from .binary_sensor import updateAllStates
 from .switch import new_switch_command, reset_switch
 from .cover import new_rols_command
 from .send import setup_serial
-from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE
+from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE , CONF_T_ID , CONF_O_ID , CONF_T_PIN , CONF_O_PIN , CONF_ID_COUNT , CONF_GATE , CONF_P_COVER , CONF_IP , CONF_STATES_UPDATE , CONF_HARMONOGRAM
 from .climate import new_climate_temp , new_climate_out
 
 from .update_states import setup_update_states
@@ -18,17 +18,6 @@ from .harmonogram import async_while , system_off
 
 first = True
 conf = None
-
-CONF_T_ID = "t_id"
-CONF_O_ID = "o_id"
-CONF_T_PIN = "t_pin"
-CONF_O_PIN = "o_pin"
-CONF_ID_COUNT = "id"
-CONF_GATE = "gate"
-CONF_P_COVER = "p_covers"
-CONF_IP = "ip"
-CONF_STATES_UPDATE = "states_update"
-CONF_HARMONOGRAM = "harmonogram"
 
 STANDARD_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,

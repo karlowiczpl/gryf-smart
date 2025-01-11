@@ -1,4 +1,3 @@
-import logging
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import HVACMode, HVACAction, ClimateEntityFeature
 from homeassistant.const import UnitOfTemperature, ATTR_TEMPERATURE
@@ -40,14 +39,14 @@ class Climate(ClimateEntity, RestoreEntity):
 
     async def set_new_state(self, state):
         self._temperature = float(state)
-        await self.update()
+        self.update()
 
     async def update_out(self, parsed_states):
         if parsed_states[self._o_pin] == "1":
             self._hvac_action = HVACAction.HEATING
         else:
             self._hvac_action = HVACAction.IDLE
-        await self.update()
+        self.update()
         self.async_write_ha_state()
 
     @property
@@ -106,15 +105,15 @@ class Climate(ClimateEntity, RestoreEntity):
         if ATTR_TEMPERATURE in kwargs:
             self._target_temperature = kwargs[ATTR_TEMPERATURE]
             self.async_write_ha_state()
-        await self.update()
+        self.update()
 
     async def async_set_hvac_mode(self, hvac_mode):
         if hvac_mode in self.hvac_modes:
             self._hvac_mode = hvac_mode
             self.async_write_ha_state()
-        await self.update()
+        self.update()
 
-    async def update(self):
+    def update(self):
         if self._hvac_mode == HVACMode.HEAT:
             states = ["0"] * (6 if self._o_pin < 7 else 8)
             states[self._o_pin - 1] = "1" if self._temperature < self._target_temperature else "2"
@@ -125,4 +124,4 @@ class Climate(ClimateEntity, RestoreEntity):
             states[self._o_pin - 1] = "2"
             command = f"AT+SetOut={self._o_id},{','.join(states)}"
             send_command(command)
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()

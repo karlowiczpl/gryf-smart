@@ -23,8 +23,9 @@ class Ha_position_cover(Cover):
         
         self._timer_en = False
         self._new_position = 0
-
-        self.supported_features = CoverEntityFeature.SET_POSITION
+    @property
+    def supported_features(self):
+        return CoverEntityFeature.SET_POSITION
 
     async def async_set_cover_position(self, **kwargs):
         self._new_position = kwargs.get(ATTR_POSITION)

@@ -4,7 +4,7 @@ from .reset import ResetEntity
 from ..send import send_command
 from ..update_states import update_states
 from ..harmonogram import setup_date_time
-from ..const import CONF_HARMONOGRAM, CONF_NAME , CONF_PIN , CONF_ID , CONF_TIME
+from ..const import CONF_HARMONOGRAM, CONF_NAME , CONF_PIN , CONF_ID 
 
 import asyncio
 
@@ -63,7 +63,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     await setup_entities(lock_config , LockEntity , hass)
     await setup_entities(gate_config , GateEntity , hass)
 
-    async_add_entities([ResetEntity("GRYF RST" , 0 , 0)])
+    async_add_entities([ResetEntity()])
     async_add_entities(switches)
 
 async def new_switch_command(parsed_states):

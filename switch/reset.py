@@ -1,27 +1,18 @@
 import asyncio
-from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.components.switch import SwitchEntity
 
 from ..send import send_command
 
-from .const import RESET_ICON
+from .const import RESET_ICON , RESET_NAME
 
-class ResetEntity(SwitchEntity , RestoreEntity):
+class ResetEntity(SwitchEntity):
 
-    def __init__(self, name, button_id, pin):
-        self._name = name
+    def __init__(self):
         self._is_on = False
-        self._id = button_id  
-        self._pin = pin
-
-    async def async_added_to_hass(self):
-        await super().async_added_to_hass()
-        if (last_state := await self.async_get_last_state()) is not None:
-            self._is_on = last_state.state == "on"
 
     @property
     def name(self):
-        return self._name
+        return RESET_NAME
 
     @property
     def is_on(self):

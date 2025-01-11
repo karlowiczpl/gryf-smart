@@ -46,7 +46,7 @@ class Pwm(NumberEntity):
         command = f"SetLED={self._id},{self._pin},0"
         self._attr_value = 0
         send_command(command)
-        self.schedule_update_ha_state
+        self.schedule_update_ha_state()
 
     @property
     def native_value(self) -> float:

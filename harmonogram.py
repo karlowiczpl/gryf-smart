@@ -3,7 +3,7 @@ from homeassistant.helpers.storage import Store
 import uuid
 from datetime import datetime
 
-from .const import HELPER_DATETIME_ON , HELPER_BOOLEAN_OFF , HELPER_BOOLEAN_ON , HELPER_BOOLEAN_OFF , CONF_ALL , CONF_ON , CONF_OFF
+from .const import HELPER_DATETIME_OFF, HELPER_DATETIME_ON , HELPER_BOOLEAN_OFF , HELPER_BOOLEAN_ON , HELPER_BOOLEAN_OFF , CONF_ALL , CONF_ON , CONF_OFF
 
 System_on = True
 names = []
@@ -35,7 +35,7 @@ def async_while(hass):
 
         id = f"input_datetime.{name.replace(" ", "_").lower()}"
         on_state = hass.states.get(id + HELPER_DATETIME_ON)
-        off_state = hass.states.get(id + HELPER_BOOLEAN_OFF)
+        off_state = hass.states.get(id + HELPER_DATETIME_OFF)
         if on_state is not None and now.hour == on_state.attributes.get("hour", 0) and now.minute == on_state.attributes.get("minute", 0) and en_on_state.state == CONF_ON:
             ptr.turn_on()
         if off_state is not None and now.hour == off_state.attributes.get("hour", 0) and now.minute == off_state.attributes.get("minute", 0) and en_off_state.state == CONF_ON:

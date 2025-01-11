@@ -14,7 +14,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     for pwm_conf in pwm_config:
         entity = Pwm(pwm_conf.get(CONF_NAME), pwm_conf.get(CONF_ID), pwm_conf.get(CONF_PIN))
-        if pwm_conf.get("CONF_HARMONOGRAM") is not None:
+        if pwm_conf.get(CONF_HARMONOGRAM) is not None:
             await setup_date_time(hass , pwm_conf.get(CONF_NAME) , entity , pwm_conf.get(CONF_HARMONOGRAM))
         pwms.append(entity)
 

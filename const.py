@@ -1,3 +1,5 @@
+from homeassistant.components.climate.const import HVACMode , HVACAction 
+
 DOMAIN = "gryf_smart"
 
 CONF_LIGHTS = "lights"
@@ -29,3 +31,11 @@ CONF_HARMONOGRAM = "harmonogram"
 COVER_DEVICE_CLASS = "window"
 
 STATE_PAUSED = "zatrzymano"
+
+CLIMATE_START_TEMPERATURE = 85
+CLIMATE_START_TARGET_TEMPERATURE = 20
+CLIMATE_MIN_TEMP = 5
+CLIMATE_MAX_TEMP = 35
+
+DEFAULT_HAVAC_MODE = HVACMode.OFF
+DEFAULT_HAVAC_ACTION = HVACAction.IDLE

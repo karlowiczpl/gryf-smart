@@ -1,5 +1,7 @@
 from .climate import Climate
 
+from ..const import CONF_NAME , CONF_T_ID , CONF_T_PIN , CONF_O_PIN , CONF_O_ID
+
 climates = []
 
 async def new_climate_temp(parsed_states):
@@ -21,11 +23,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     climate_config = discovery_info or []
 
     for climate in climate_config:
-        name = climate.get("name")
-        t_id = climate.get("t_id")
-        t_pin = climate.get("t_pin")
-        o_id = climate.get("o_id")
-        o_pin = climate.get("o_pin")
-        climates.append(Climate(name, t_id, t_pin, o_id, o_pin))
+        climates.append(Climate(climate.get(CONF_NAME), climate.get(CONF_T_ID), climate.get(CONF_T_PIN), climate.get(CONF_O_ID), climate.get(CONF_O_PIN)))
 
     async_add_entities(climates)

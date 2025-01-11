@@ -4,7 +4,7 @@ from homeassistant.const import UnitOfTemperature, ATTR_TEMPERATURE
 from homeassistant.helpers.restore_state import RestoreEntity
 
 from ..send import send_command
-from .const import (
+from ..const import (
     CLIMATE_START_TEMPERATURE,
     CLIMATE_START_TARGET_TEMPERATURE,
     CLIMATE_MIN_TEMP,

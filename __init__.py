@@ -1,4 +1,3 @@
-"""Gryf SMART integration"""
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
@@ -149,12 +148,12 @@ async def async_setup(hass: HomeAssistant, config: dict):
     switch_config = [lights_config , lock_conf , gate_config]
     cover_conf = [cover_config , p_cover_config]
 
-    await async_load_platform('sensor', DOMAIN, sensor_config, config)
-    await async_load_platform('binary_sensor', DOMAIN, binary_sensor_config , config)
-    await async_load_platform('switch', DOMAIN, switch_config , config)
-    await async_load_platform('cover', DOMAIN, cover_conf , config)
-    await async_load_platform('number', DOMAIN, pwm_config , config)
-    await async_load_platform('climate', DOMAIN, climate_config , config)
+    await async_load_platform(hass , 'sensor', DOMAIN, sensor_config , config)
+    await async_load_platform(hass , 'binary_sensor', DOMAIN, binary_sensor_config , config)
+    await async_load_platform(hass , 'switch', DOMAIN, switch_config , config)
+    await async_load_platform(hass , 'cover', DOMAIN, cover_conf , config)
+    await async_load_platform(hass , 'number', DOMAIN, pwm_config , config)
+    await async_load_platform(hass ,'climate', DOMAIN, climate_config , config)
 
     async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)

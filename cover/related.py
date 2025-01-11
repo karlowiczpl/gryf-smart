@@ -1,4 +1,5 @@
-# from homeassistant.components.cover import SUPPORT_SET_POSITION , ATTR_POSITION , STATE_OPENING, STATE_CLOSING
+
+from homeassistant.components.cover import ATTR_POSITION , STATE_OPENING, STATE_CLOSING
 from homeassistant.const import STATE_CLOSED, STATE_OPEN
 from homeassistant.components.cover import CoverEntityFeature
 
@@ -9,8 +10,6 @@ from ..send import send_command
 
 
 class Ha_position_cover(Cover):
-
-    _attr_supported_features = CoverEntityFeature.SET_POSITION
 
     def __init__(self, name, cover_id, pin, time):
         self._name = name
@@ -24,6 +23,8 @@ class Ha_position_cover(Cover):
         
         self._timer_en = False
         self._new_position = 0
+
+        self.supported_features = CoverEntityFeature.SET_POSITION
 
     async def async_set_cover_position(self, **kwargs):
         self._new_position = kwargs.get(ATTR_POSITION)

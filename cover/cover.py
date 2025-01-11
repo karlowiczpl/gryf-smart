@@ -4,7 +4,6 @@ from homeassistant.components.cover import CoverDeviceClass
 from homeassistant.helpers.restore_state import RestoreEntity  
 
 from ..send import send_command
-import logging
 
 
 class Cover(CoverEntity, RestoreEntity):  

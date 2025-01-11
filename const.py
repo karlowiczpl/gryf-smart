@@ -29,6 +29,8 @@ CONF_STATES_UPDATE = "states_update"
 CONF_HARMONOGRAM = "harmonogram"
 
 COVER_DEVICE_CLASS = "window"
+DOOR_DEVICE_CLASS = "door"
+WINDOW_DEVICE_CLASS = "window"
 
 STATE_PAUSED = "zatrzymano"
 

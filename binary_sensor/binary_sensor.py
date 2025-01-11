@@ -1,6 +1,7 @@
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.core import HomeAssistant
 from homeassistant.helpers.restore_state import RestoreEntity
+
+from ..const import DOOR_DEVICE_CLASS , WINDOW_DEVICE_CLASS
 
 class BinarySensorEntity(BinarySensorEntity, RestoreEntity):
     def __init__(self, name: str, door_id, pin):
@@ -40,9 +41,9 @@ class BinarySensorEntity(BinarySensorEntity, RestoreEntity):
 class DoorSensor(BinarySensorEntity):
     @property
     def device_class(self):
-        return "door"
+        return DOOR_DEVICE_CLASS
 
 class WindowSensor(BinarySensorEntity):
     @property
     def device_class(self):
-        return "window"
+        return WINDOW_DEVICE_CLASS

@@ -1,21 +1,24 @@
 from homeassistant.components.number import NumberEntity
 
 from .send import send_command
+from .const import CONF_NAME , CONF_HARMONOGRAM , CONF_ID , CONF_PIN
 
-covers = []
+from .harmonogram import setup_date_time
+
+pwms = []
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    global covers
+    global pwms
 
-    cover_config = discovery_info or []
+    pwm_config = discovery_info or []
 
-    for cover in cover_config:
-        name = cover.get("name")
-        cover_id = cover.get("id")
-        pin = cover.get("pin")
-        covers.append(Pwm(name, cover_id, pin))
+    for pwm_conf in pwm_config:
+        entity = Pwm(pwm_conf.get(CONF_NAME), pwm_conf.get(CONF_ID), pwm_conf.get(CONF_PIN))
+        if pwm_conf.get("CONF_HARMONOGRAM") is not None:
+            await setup_date_time(hass , pwm_conf.get(CONF_NAME) , entity , pwm_conf.get(CONF_HARMONOGRAM))
+        pwms.append(entity)
 
-    async_add_entities(covers)
+    async_add_entities(pwms)
 
 class Pwm(NumberEntity):
     def __init__(self, name, pwm_id , pin):
@@ -32,6 +35,14 @@ class Pwm(NumberEntity):
 
         self._attr_value = value
         self.schedule_update_ha_state()
+
+    def turn_on(self):
+        command = f"SetLED={self._id},{self._pin},100"
+        send_command(command)
+
+    def turn_off(self):
+        command = f"SetLED={self._id},{self._pin},0"
+        send_command(command)
 
     @property
     def native_value(self) -> float:

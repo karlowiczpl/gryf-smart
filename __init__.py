@@ -1,9 +1,12 @@
+
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.event import async_track_state_change_event , async_track_time_interval
 import voluptuous as vol
 from datetime import timedelta
+import re
+import logging
 
 from .sensor import input_state_relaod , ps_state_reload , pl_state_reload , temp_reload
 from .binary_sensor import updateAllStates
@@ -18,6 +21,8 @@ from .harmonogram import async_while , system_off
 
 first = True
 conf = None
+
+_LOGGER = logging.getLogger(__name__)
 
 STANDARD_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,
@@ -65,6 +70,14 @@ CONFIG_SCHEMA = vol.Schema({
     })
 }, extra=vol.ALLOW_EXTRA)
 
+async def wrapped_state_changed(event):
+    task = asyncio.create_task(sensor_state_changed(event))
+
+    try:
+        await task
+    except Exception as e:
+        task.cancel()
+
 async def sensor_state_changed(event):
     global first
 
@@ -80,6 +93,10 @@ async def sensor_state_changed(event):
         first = False
         await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
 
+    for x in parsed_states:
+        x = re.sub(r"\D" , "" , x)
+
+    _LOGGER.debug("Logger: %s", parsed_states)
 
     if str(parts[1]) == "O":
         await new_switch_command(parsed_states)

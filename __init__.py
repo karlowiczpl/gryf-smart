@@ -1,4 +1,3 @@
-
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
@@ -7,6 +6,7 @@ import voluptuous as vol
 from datetime import timedelta
 import re
 import logging
+import asyncio
 
 from .sensor import input_state_relaod , ps_state_reload , pl_state_reload , temp_reload
 from .binary_sensor import updateAllStates
@@ -72,11 +72,22 @@ CONFIG_SCHEMA = vol.Schema({
 
 async def wrapped_state_changed(event):
     task = asyncio.create_task(sensor_state_changed(event))
-
     try:
-        await task
+        await asyncio.wait_for(task, timeout=1)
+    except TimeoutError:
+        _LOGGER.warning("Task timed out while handling event: %s", event)
     except Exception as e:
-        task.cancel()
+        _LOGGER.error("Unexpected error in wrapped_state_changed: %s", e)
+
+def filtr_parsed_states(parsed_states):
+    result = [re.sub(r'\D', '', item) for item in parsed_states]
+    return result
+
+def is_empty(input_list):
+    for x in input_list:
+        if x == '':
+            return True
+    return False
 
 async def sensor_state_changed(event):
     global first
@@ -89,12 +100,11 @@ async def sensor_state_changed(event):
     last_state = parsed_states[-1].split(';')
     parsed_states[-1] = last_state[0]
     
+    parsed_states = filtr_parsed_states(parsed_states)
+    
     if first:
         first = False
         await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
-
-    for x in parsed_states:
-        x = re.sub(r"\D" , "" , x)
 
     _LOGGER.debug("Logger: %s", parsed_states)
 
@@ -161,7 +171,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     await async_load_platform(hass , 'number', DOMAIN, pwm_config , config)
     await async_load_platform(hass ,'climate', DOMAIN, climate_config , config)
 
-    async_track_state_change_event(hass, 'sensor.gryf_in', sensor_state_changed)
+    async_track_state_change_event(hass, 'sensor.gryf_in', wrapped_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
 
     async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))

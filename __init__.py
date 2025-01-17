@@ -15,9 +15,9 @@ from .cover import new_rols_command
 from .send import setup_serial
 from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE , CONF_T_ID , CONF_O_ID , CONF_T_PIN , CONF_O_PIN , CONF_ID_COUNT , CONF_GATE , CONF_P_COVER , CONF_IP , CONF_STATES_UPDATE , CONF_HARMONOGRAM
 from .climate import new_climate_temp , new_climate_out
-
 from .update_states import setup_update_states
 from .harmonogram import async_while , system_off
+from .lock import new_lock_command 
 
 first = True
 conf = None
@@ -111,6 +111,7 @@ async def sensor_state_changed(event):
     if str(parts[1]) == "O":
         await new_switch_command(parsed_states)
         await new_climate_out(parsed_states)
+        await new_lock_command(parsed_states)
     
     if str(parts[1]) == "I":
         await input_state_relaod(parsed_states)

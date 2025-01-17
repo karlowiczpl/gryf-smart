@@ -3,27 +3,42 @@ from homeassistant.components.lock import LockEntity, LockEntityFeature
 from enum import Enum
 
 from .send import send_command
+from .const import CONF_HARMONOGRAM, CONF_NAME , CONF_PIN , CONF_ID 
+
+locks = []
 
 class States(Enum):
-    LOCK = 1
+    LOCK = 0
+    UNLOCK = 1
     LOCKING = 2
-    UNLOCK = 3
-    UNLOCKING = 4
+    UNLOCKING = 3
+
+async def new_lock_command(parsed_states):
+    if locks:
+        for lock in locks:
+            await lock.feedback(parsed_states)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    async_add_entities([GryfLock("test" , 3 , 1 , 1 , 1)])
+    # async_add_entities([GryfLock("test" , 3 , 1 , 1 , 1)])
+    global locks
+    lock_config = discovery_info or []
+
+    for item in lock_config:
+        locks.append(GryfLock(item.get(CONF_NAME) , item.get(CONF_ID) , item.get(CONF_PIN) , 1 , 1))
+
+    async_add_entities(locks)
 
 class GryfLock(LockEntity):
 
     def __init__(self, name, id_o, pin_o , id_i , pin_i):
         self._name = name
-        self._is_on = False
         self._id = id_o  
         self._pin = pin_o
         self._id_i = id_i
         self._pin_i = pin_i
         self._attr_supported_features = LockEntityFeature.OPEN
         self._state = 1
+        self._open = False
 
     # async def async_added_to_hass(self):
     #     await super().async_added_to_hass()
@@ -32,15 +47,19 @@ class GryfLock(LockEntity):
     
     async def async_lock(self):
         self.create_command("1")
+        self._state = States.LOCKING
 
     async def async_unlock(self):
         self.create_command("1")
+        self._state = States.UNLOCKING
 
     async def async_open(self):
         pass
 
     async def feedback(self, parsed_states):
-        pass
+        if parsed_states[0] == str(self._id):
+            self._state = int(parsed_states[self._pin])
+            self.async_write_ha_state()
 
     @property
     def is_locked(self):

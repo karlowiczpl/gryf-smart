@@ -4,9 +4,9 @@ from homeassistant.const import STATE_ALARM_ARMED_AWAY, STATE_ALARM_ARMED_HOME, 
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+def setup_platform(hass, config, add_entities, discovery_info=None):
     """Set up the custom alarm control panel."""
-    async_add_entities([CustomAlarmEntity()])
+    add_entities([CustomAlarmEntity()])
 
 class CustomAlarmEntity(AlarmControlPanelEntity):
     """Representation of a custom alarm control panel."""

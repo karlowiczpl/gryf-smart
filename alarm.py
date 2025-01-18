@@ -50,7 +50,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
             "is_active": self._is_active,
         }
 
-    def alarm_disarm(self, code=None):
+    async def async_alarm_disarm(self, code=None):
         """Send disarm command."""
         if code == self._code:
             _LOGGER.info("Disarming alarm with correct code")
@@ -60,7 +60,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
         else:
             _LOGGER.warning("Failed disarming attempt with incorrect code")
 
-    def alarm_arm_home(self, code=None):
+    async def async_alarm_arm_home(self, code=None):
         """Send arm home command."""
         if code == self._code:
             _LOGGER.info("Arming alarm in home mode with correct code")
@@ -70,7 +70,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
         else:
             _LOGGER.warning("Failed arming attempt with incorrect code")
 
-    def alarm_arm_away(self, code=None):
+    async def async_alarm_arm_away(self, code=None):
         """Send arm away command."""
         if code == self._code:
             _LOGGER.info("Arming alarm in away mode with correct code")
@@ -80,7 +80,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
         else:
             _LOGGER.warning("Failed arming attempt with incorrect code")
 
-    def alarm_trigger(self, code=None):
+    async def async_alarm_trigger(self, code=None):
         """Trigger the alarm."""
         _LOGGER.info("Alarm triggered")
         self._state = STATE_ALARM_TRIGGERED

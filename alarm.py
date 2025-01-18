@@ -1,0 +1,55 @@
+import logging
+from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity
+from homeassistant.const import STATE_ALARM_ARMED_AWAY, STATE_ALARM_ARMED_HOME, STATE_ALARM_DISARMED, STATE_ALARM_TRIGGERED
+
+_LOGGER = logging.getLogger(__name__)
+
+def setup_platform(hass, config, add_entities, discovery_info=None):
+    """Set up the custom alarm control panel."""
+    add_entities([CustomAlarmEntity()])
+
+class CustomAlarmEntity(AlarmControlPanelEntity):
+    """Representation of a custom alarm control panel."""
+
+    def __init__(self):
+        """Initialize the alarm panel."""
+        self._state = STATE_ALARM_DISARMED
+
+    @property
+    def name(self):
+        """Return the name of the alarm."""
+        return "Custom Alarm"
+
+    @property
+    def state(self):
+        """Return the state of the device."""
+        return self._state
+
+    @property
+    def supported_features(self):
+        """Return the list of supported features."""
+        return 0
+
+    def alarm_disarm(self, code=None):
+        """Send disarm command."""
+        _LOGGER.info("Disarming alarm")
+        self._state = STATE_ALARM_DISARMED
+        self.schedule_update_ha_state()
+
+    def alarm_arm_home(self, code=None):
+        """Send arm home command."""
+        _LOGGER.info("Arming alarm in home mode")
+        self._state = STATE_ALARM_ARMED_HOME
+        self.schedule_update_ha_state()
+
+    def alarm_arm_away(self, code=None):
+        """Send arm away command."""
+        _LOGGER.info("Arming alarm in away mode")
+        self._state = STATE_ALARM_ARMED_AWAY
+        self.schedule_update_ha_state()
+
+    def alarm_trigger(self, code=None):
+        """Trigger the alarm."""
+        _LOGGER.info("Alarm triggered")
+        self._state = STATE_ALARM_TRIGGERED
+        self.schedule_update_ha_state()

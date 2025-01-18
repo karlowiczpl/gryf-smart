@@ -172,6 +172,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     await async_load_platform(hass , 'number', DOMAIN, pwm_config , config)
     await async_load_platform(hass ,'climate', DOMAIN, climate_config , config)
     await async_load_platform(hass ,'lock', DOMAIN, lock_conf , config)
+    await async_load_platform(hass ,'alarm', DOMAIN, lock_conf , config)
 
     async_track_state_change_event(hass, 'sensor.gryf_in', wrapped_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)

@@ -1,5 +1,5 @@
 import logging
-from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity
+from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity ,AlarmControlPanelEntityFeature 
 from homeassistant.const import (
     STATE_ALARM_ARMED_AWAY,
     STATE_ALARM_ARMED_HOME,
@@ -10,10 +10,17 @@ from homeassistant.const import (
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the custom alarm control panel."""
     async_add_entities([CustomAlarmEntity()])
+
 class CustomAlarmEntity(AlarmControlPanelEntity):
-    """Representation of a custom alarm control panel."""
+
+    _atr_should_poll = False
+    _atr_supported_features = (
+        AlarmControlPanelEntityFeature.ARM_HOME
+        | AlarmControlPanelEntityFeature.ARM_AWAY
+        | AlarmControlPanelEntityFeature.ARM_NIGHT
+    )
+    _attr_code_arm_required = False
 
     def __init__(self):
         """Initialize the alarm panel."""

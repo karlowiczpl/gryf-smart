@@ -1,5 +1,5 @@
 import logging
-from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity ,AlarmControlPanelEntityFeature 
+from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity, AlarmControlPanelEntityFeature
 from homeassistant.const import (
     STATE_ALARM_ARMED_AWAY,
     STATE_ALARM_ARMED_HOME,
@@ -10,12 +10,14 @@ from homeassistant.const import (
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    """Set up the custom alarm control panel."""
     async_add_entities([CustomAlarmEntity()])
 
 class CustomAlarmEntity(AlarmControlPanelEntity):
+    """Representation of a custom alarm control panel."""
 
-    _atr_should_poll = False
-    _atr_supported_features = (
+    _attr_should_poll = False
+    _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_HOME
         | AlarmControlPanelEntityFeature.ARM_AWAY
         | AlarmControlPanelEntityFeature.ARM_NIGHT
@@ -39,11 +41,6 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
         return self._state
 
     @property
-    def supported_features(self):
-        """Return the list of supported features."""
-        return 0
-
-    @property
     def extra_state_attributes(self):
         """Return additional attributes."""
         return {
@@ -56,7 +53,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
             _LOGGER.info("Disarming alarm with correct code")
             self._state = STATE_ALARM_DISARMED
             self._is_active = False
-            self.schedule_update_ha_state()
+            self.async_write_ha_state()
         else:
             _LOGGER.warning("Failed disarming attempt with incorrect code")
 
@@ -66,7 +63,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
             _LOGGER.info("Arming alarm in home mode with correct code")
             self._state = STATE_ALARM_ARMED_HOME
             self._is_active = True
-            self.schedule_update_ha_state()
+            self.async_write_ha_state()
         else:
             _LOGGER.warning("Failed arming attempt with incorrect code")
 
@@ -76,7 +73,7 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
             _LOGGER.info("Arming alarm in away mode with correct code")
             self._state = STATE_ALARM_ARMED_AWAY
             self._is_active = True
-            self.schedule_update_ha_state()
+            self.async_write_ha_state()
         else:
             _LOGGER.warning("Failed arming attempt with incorrect code")
 
@@ -85,4 +82,4 @@ class CustomAlarmEntity(AlarmControlPanelEntity):
         _LOGGER.info("Alarm triggered")
         self._state = STATE_ALARM_TRIGGERED
         self._is_active = True
-        self.schedule_update_ha_state()
+        self.async_write_ha_state()

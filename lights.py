@@ -8,8 +8,12 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 class MyLightEntity(LightEntity):
     def __init__(self, name):
         # Wywołanie konstruktorów obu klas bazowych
-        MyBaseEntity.__init__(self, name)
         self._is_on = False
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def is_on(self):

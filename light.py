@@ -1,3 +1,4 @@
+
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.light import LightEntity
 from enum import Enum
@@ -10,7 +11,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         "pin": 1,
         "name": "entity_light"
     }
-    add_entities([MyLightEntity( cw)])
+    add_entities([MyLightEntity(cw)])
 
 class device_types(Enum):
     classic_schema = 0
@@ -25,6 +26,7 @@ class __device:
             self._id = config.get("id")
             self._pin = config.get("pin")
             self._name = config.get("name")
+
     @property
     def name(self):
         return self._name
@@ -39,31 +41,34 @@ class __device:
 
 class MyBaseEntity(Entity):
     def __init__(self , config) -> None:
-        self._device = __device(config , device_types.classic_schema)
+        # Inicjalizowanie _device w konstruktorze klasy bazowej
+        self._device = __device(config, device_types.classic_schema)
+    
     @property
     def name(self):
         return self._device.name
-    
-class MyLightEntity(LightEntity , MyBaseEntity):
+
+    def update_custom_state(self, state):
+        """Method to update the state of the entity."""
+        self._state = state
+
+class MyLightEntity(LightEntity, MyBaseEntity):
     def __init__(self, config):
-        MyBaseEntity.__init__(self , config)
-        # Wywołanie konstruktorów obu klas bazowych
+        # Wywołanie konstruktora klasy bazowej
+        super().__init__(config)
         self._is_on = False
-    # @property
-    # def name(self):
-    #     return self._name
 
     @property
     def is_on(self):
-        """Zwraca stan światła."""
+        """Return the state of the light."""
         return self._is_on
 
     async def async_turn_on(self, **kwargs):
-        """Włącza światło."""
+        """Turn the light on."""
         self._is_on = True
-        self.update_custom_state("light is on")  # Użycie metody z MyBaseEntity
+        self.update_custom_state("light is on")
 
     async def async_turn_off(self, **kwargs):
-        """Wyłącza światło."""
+        """Turn the light off."""
         self._is_on = False
-        self.update_custom_state("light is off")  # Użycie metody z MyBaseEntity
+        self.update_custom_state("light is off")

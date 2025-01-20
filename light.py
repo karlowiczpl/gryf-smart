@@ -1,74 +1,48 @@
+from .send import send_command
 
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.light import LightEntity
-from enum import Enum
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
-    """Set up the custom alarm control panel."""
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    async_add_entities([gryf_light(3 , 1)])
+
+class _gryf_output():
+    def __init__(self , id , pin) -> None:
+        self._id = id
+        self._pin = pin
     
-    cw = {
-        "id": 1,
-        "pin": 1,
-        "name": "entity_light"
-    }
-    add_entities([MyLightEntity(cw)])
+    def set_on(self):
+        self.create_command("1")
 
-class device_types(Enum):
-    classic_schema = 0
-    cover_schema = 1
-    climate_schema = 2
+    def set_off(self):
+        self.create_command("2")
 
-class __device:
-    def __init__(self , config , schema: device_types) -> None:
-        self._schema = schema
+    def set_toggle(self):
+        self.create_command("3")
 
-        if schema == device_types.classic_schema:
-            self._id = config.get("id")
-            self._pin = config.get("pin")
-            self._name = config.get("name")
+    def create_command(self , state):
+        if self._pin > 6:
+            states_list = ["0", "0", "0", "0", "0", "0" , "0" , "0"]
+        else:
+            states_list = ["0", "0", "0", "0", "0", "0"]
+        states_list[self._pin - 1] = state
+        command = f"AT+SetOut={self._id},{','.join(states_list)}"
+        send_command(command)
+
+class gryf_light(LightEntity , _gryf_output):
+    def __init__(self, id, pin) -> None:
+        super().__init__(id, pin)
+        self._name = "tescior"
 
     @property
     def name(self):
         return self._name
-    
-    @property
-    def pin(self):
-        return self._pin
 
-    @property
-    def id(self):
-        return self._id
+    async def async_turn_on(self):
+        self.set_on()
 
-class MyBaseEntity(Entity):
-    def __init__(self , config) -> None:
-        # Inicjalizowanie _device w konstruktorze klasy bazowej
-        self._device = __device(config, device_types.classic_schema)
-    
-    @property
-    def name(self):
-        return self._device.name
+    async def async_turn_off(self):
+        self.set_off()
 
-    def update_custom_state(self, state):
-        """Method to update the state of the entity."""
-        self._state = state
-
-class MyLightEntity(LightEntity, MyBaseEntity):
-    def __init__(self, config):
-        # Wywołanie konstruktora klasy bazowej
-        super().__init__(config)
-        self._is_on = False
-
-    @property
-    def is_on(self):
-        """Return the state of the light."""
-        return self._is_on
-
-    async def async_turn_on(self, **kwargs):
-        """Turn the light on."""
-        self._is_on = True
-        self.update_custom_state("light is on")
-
-    async def async_turn_off(self, **kwargs):
-        """Turn the light off."""
-        self._is_on = False
-        self.update_custom_state("light is off")
+    async def assync_toggle(self):
+        self.set_toggle()

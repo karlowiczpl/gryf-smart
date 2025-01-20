@@ -6,37 +6,13 @@ from homeassistant.const import (
     STATE_ALARM_DISARMED,
     STATE_ALARM_TRIGGERED,
 )
-
-from .send import send_command
+from .hardware import _gryf_output
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the custom alarm control panel."""
     async_add_entities([CustomAlarmEntity()])
-
-class _gryf_output:
-    def __init__(self , id , pin):
-        self._id = id
-        self._pin = pin
-
-    def set_out(self , state):
-        if state == 0:
-            self.create_command("2")
-        elif state == 1:
-            self.create_command("1")
-        else:
-            self.create_command("3")
-
-            
-    def create_command(self , state):
-        if self._pin > 6:
-            states_list = ["0", "0", "0", "0", "0", "0" , "0" , "0"]
-        else:
-            states_list = ["0", "0", "0", "0", "0", "0"]
-        states_list[self._pin - 1] = state
-        command = f"AT+SetOut={self._id},{','.join(states_list)}"
-        send_command(command)
 
 class CustomAlarmEntity(AlarmControlPanelEntity , _gryf_output):
     """Representation of a custom alarm control panel."""
@@ -67,6 +43,13 @@ class CustomAlarmEntity(AlarmControlPanelEntity , _gryf_output):
     def state(self):
         """Return the state of the device."""
         return self._state
+    async def output_state_changed(self , state):
+        if state == 1:
+            self._state = STATE_ALARM_ARMED_HOME  # Ustawiamy stan na 'rozbrojony'
+            self.async_write_ha_state()
+        else:
+            self._state = STATE_ALARM_DISARMED  # Ustawiamy stan na 'rozbrojony'
+            self.async_write_ha_state()
 
     @property
     def supported_features(self):

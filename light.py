@@ -38,13 +38,11 @@ class __device:
         return self._id
 
 class MyBaseEntity(Entity):
-    _device: __device
-
     def __init__(self , config) -> None:
         self._device = __device(config , device_types.classic_schema)
     @property
     def name(self):
-        return "entity_light"
+        return self._device.name
     
 class MyLightEntity(LightEntity , MyBaseEntity):
     def __init__(self, config):

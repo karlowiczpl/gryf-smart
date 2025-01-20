@@ -1,6 +1,6 @@
 from .climate import Climate
 
-from ..const import CONF_HARMONOGRAM, CONF_NAME , CONF_T_ID , CONF_T_PIN , CONF_O_PIN , CONF_O_ID
+from ..const import CONF_HARMONOGRAM, CONF_NAME , CONF_T_ID , CONF_T_PIN , CONF_O_PIN , CONF_O_ID , CONF_TILT
 from ..harmonogram import setup_date_time
 
 climates = []
@@ -24,7 +24,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     climate_config = discovery_info or []
 
     for climate in climate_config:
-        entity = (Climate(climate.get(CONF_NAME), climate.get(CONF_T_ID), climate.get(CONF_T_PIN), climate.get(CONF_O_ID), climate.get(CONF_O_PIN)))
+        entity = (Climate(climate.get(CONF_NAME), climate.get(CONF_T_ID), climate.get(CONF_T_PIN), climate.get(CONF_O_ID), climate.get(CONF_O_PIN) , climate.get(CONF_TILT)))
         if climate.get(CONF_HARMONOGRAM) is not None:
             await setup_date_time(hass , climate.get(CONF_NAME) , entity , climate.get(CONF_HARMONOGRAM))
         climates.append(entity)

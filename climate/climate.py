@@ -14,7 +14,7 @@ from ..const import (
 )
 
 class Climate(ClimateEntity, RestoreEntity):
-    def __init__(self, name, t_id, t_pin, o_id, o_pin):
+    def __init__(self, name, t_id, t_pin, o_id, o_pin , tilt):
         self._name = name
         self._temperature = CLIMATE_START_TEMPERATURE
         self._target_temperature = CLIMATE_START_TARGET_TEMPERATURE
@@ -26,6 +26,11 @@ class Climate(ClimateEntity, RestoreEntity):
         self._o_pin = o_pin
         self._o_id = o_id
         self._hvac_action = DEFAULT_HAVAC_ACTION
+
+        if tilt != None:
+            self.tilt = tilt
+        else:
+            self.tilt = 0
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -122,7 +127,13 @@ class Climate(ClimateEntity, RestoreEntity):
     def update(self):
         if self._hvac_mode == HVACMode.HEAT:
             states = ["0"] * (6 if self._o_pin < 7 else 8)
-            states[self._o_pin - 1] = "1" if self._temperature < self._target_temperature else "2"
+            if self._tilt == 0:
+                states[self._o_pin - 1] = "1" if self._temperature < self._target_temperature else "2"
+            else:
+                if self._target_temperature > self._temperature + self._tilt:
+                    states[self._o_pin - 1] = "2"
+                elif self._target_temperature < self._temperature - self._tilt:
+                    states[self._o_pin - 1] = "1"
             command = f"AT+SetOut={self._o_id},{','.join(states)}"
             send_command(command)
         elif self._hvac_mode == HVACMode.OFF:

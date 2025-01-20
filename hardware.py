@@ -1,11 +1,29 @@
 from .send import send_command
 
 outputs = []
+inputs = []
 
 async def new_output_command(parsed_states):
     for output in outputs:
-        output.private_feedback(parsed_states)
+        await output.private_feedback(parsed_states)
+
+async def new_input_command(parsed_states):
+    for input in inputs:
+        await input.private_feedback(parsed_states)
     
+class _gryf_input:
+    def __init__(self , id , pin):
+        self._id = id
+        self._pin = pin
+
+        new_input_instance(self)
+
+    async def private_feedback(self , parsed_states):
+        if int(parsed_states[0]) == self._id:
+            await self.output_state_changed(int(parsed_states[self._pin]))
+
+    async def output_state_changed(self , state):
+        pass
 class _gryf_output:
     def __init__(self , id , pin):
         self._id = id
@@ -31,11 +49,8 @@ class _gryf_output:
         send_command(command)
 
     async def private_feedback(self , parsed_states):
-        if parsed_states[0] == str(self._id):
-            if parsed_states[self._pin] == 1:
-                await self.output_state_changed(1)
-            elif parsed_states[self._pin] == 2:
-                await self.output_state_changed(0)
+        if int(parsed_states[0]) == self._id:
+            await self.output_state_changed(int(parsed_states[self._pin]))
 
     async def output_state_changed(self , state):
         pass
@@ -44,3 +59,8 @@ def new_output_instance(instance: _gryf_output):
     global outputs
 
     outputs.append(instance)
+
+def new_input_instance(instance: _gryf_input):
+    global inputs
+
+    inputs.append(instance)

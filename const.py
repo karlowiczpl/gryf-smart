@@ -2,6 +2,7 @@ from homeassistant.components.climate.const import HVACMode , HVACAction
 
 DOMAIN = "gryf_smart"
 
+CONF_TILT = "tilt"
 CONF_LIGHTS = "lights"
 CONF_BUTTON = "buttons"
 CONF_NAME = "name"

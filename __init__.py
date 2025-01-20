@@ -13,7 +13,7 @@ from .binary_sensor import updateAllStates
 from .switch import new_switch_command, reset_switch
 from .cover import new_rols_command
 from .send import setup_serial
-from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE , CONF_T_ID , CONF_O_ID , CONF_T_PIN , CONF_O_PIN , CONF_ID_COUNT , CONF_GATE , CONF_P_COVER , CONF_IP , CONF_STATES_UPDATE , CONF_HARMONOGRAM
+from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CONF_PIN , CONF_SERIAL , CONF_DOORS , CONF_WINDOW , CONF_TEMPERATURE , CONF_COVER , CONF_TIME , CONF_LOCK , CONF_PWM , CONF_CLIMATE , CONF_T_ID , CONF_O_ID , CONF_T_PIN , CONF_O_PIN , CONF_ID_COUNT , CONF_GATE , CONF_P_COVER , CONF_IP , CONF_STATES_UPDATE , CONF_HARMONOGRAM , CONF_TILT
 from .climate import new_climate_temp , new_climate_out
 from .update_states import setup_update_states
 from .harmonogram import async_while , system_off
@@ -42,6 +42,7 @@ COVER_SCHEMA = vol.Schema({
     vol.Required(CONF_PIN): cv.positive_int,
     vol.Required(CONF_TIME): cv.positive_int,
     vol.Optional(CONF_HARMONOGRAM): cv.string,
+    vol.Optional(CONF_TILT): cv.positive_int
 })
 CLIMATE_SCHEMA = vol.Schema({
     vol.Required(CONF_NAME): cv.string,
@@ -173,7 +174,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
     await async_load_platform(hass , 'cover', DOMAIN, cover_conf , config)
     await async_load_platform(hass , 'number', DOMAIN, pwm_config , config)
     await async_load_platform(hass ,'climate', DOMAIN, climate_config , config)
-    await async_load_platform(hass ,'lock', DOMAIN, lock_conf , config)
     await async_load_platform(hass ,'alarm_control_panel', DOMAIN, lock_conf , config)
     await async_load_platform(hass ,'light', DOMAIN, lock_conf , config)
 

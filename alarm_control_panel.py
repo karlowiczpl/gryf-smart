@@ -86,39 +86,11 @@ class CustomAlarmEntity(AlarmControlPanelEntity , _gryf_output):
         pass
 
     async def async_alarm_disarm(self, code=None):
-        """Send disarm command."""
-        if code is not None and int(code) == self._code:  # Porównanie kodu PIN jako liczby
-            _LOGGER.info("Disarming alarm with correct code")
-            self._state = STATE_ALARM_DISARMED  # Ustawiamy stan na 'rozbrojony'
-            self._is_active = False
-            self._changed_by = "User"  # Ustawiamy, kto zmienił stan
-            self.async_write_ha_state()
-            self.set_out(0)
-        else:
-            _LOGGER.warning("Failed disarming attempt with incorrect code")
+        self.set_out(0)
+        
 
     async def async_alarm_arm_home(self, code=None):
-        """Send arm home command."""
-        if code is not None and int(code) == self._code:  # Porównanie kodu PIN jako liczby
-            _LOGGER.info("Arming alarm in home mode with correct code")
-            self._state = STATE_ALARM_ARMED_HOME  # Ustawiamy stan na 'uzbrojony w trybie domowym'
-            self._is_active = True
-            self._changed_by = "User"  # Ustawiamy, kto zmienił stan
-            self.async_write_ha_state()
-            self.set_out(1)
-        else:
-            _LOGGER.warning("Failed arming attempt with incorrect code")
-
-    async def async_alarm_arm_away(self, code=None):
-        """Send arm away command."""
-        if code is not None and int(code) == self._code:  # Porównanie kodu PIN jako liczby
-            _LOGGER.info("Arming alarm in away mode with correct code")
-            self._state = STATE_ALARM_ARMED_AWAY  # Ustawiamy stan na 'uzbrojony w trybie zdalnym'
-            self._is_active = True
-            self._changed_by = "User"  # Ustawiamy, kto zmienił stan
-            self.async_write_ha_state()
-        else:
-            _LOGGER.warning("Failed arming attempt with incorrect code")
+        self.set_out(1)
 
     async def async_alarm_trigger(self, code=None):
         """Trigger the alarm."""

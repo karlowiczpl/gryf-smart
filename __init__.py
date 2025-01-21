@@ -17,8 +17,8 @@ from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CO
 from .climate import new_climate_temp , new_climate_out
 from .update_states import setup_update_states
 from .harmonogram import async_while , system_off
-from .lock import new_lock_command 
 from .hardware import new_output_command
+from .devices import async_device_init
 
 first = True
 conf = None
@@ -181,6 +181,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
 
     async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))
+    async_device_init(hass)
     system_off()
 
     return True

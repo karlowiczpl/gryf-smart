@@ -1,12 +1,11 @@
 import logging
 from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity, AlarmControlPanelEntityFeature, CodeFormat
 from homeassistant.const import (
-    STATE_ALARM_ARMED_AWAY,
     STATE_ALARM_ARMED_HOME,
     STATE_ALARM_DISARMED,
     STATE_ALARM_TRIGGERED,
 )
-from .hardware import _gryf_output
+from .devices.output import _gryf_output as device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,7 +13,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the custom alarm control panel."""
     async_add_entities([CustomAlarmEntity()])
 
-class CustomAlarmEntity(AlarmControlPanelEntity , _gryf_output):
+class CustomAlarmEntity(AlarmControlPanelEntity , device):
     """Representation of a custom alarm control panel."""
 
     _attr_should_poll = False

@@ -17,6 +17,7 @@ from .const import DOMAIN , CONF_LIGHTS , CONF_BUTTON , CONF_NAME , CONF_ID , CO
 from .climate import new_climate_temp , new_climate_out
 from .update_states import setup_update_states
 from .harmonogram import async_while , system_off
+from .devices import setup_devices
 
 first = True
 conf = None
@@ -170,9 +171,12 @@ async def async_setup(hass: HomeAssistant, config: dict):
     await async_load_platform(hass , 'cover', DOMAIN, cover_conf , config)
     await async_load_platform(hass , 'number', DOMAIN, pwm_config , config)
     await async_load_platform(hass ,'climate', DOMAIN, climate_config , config)
+    await async_load_platform(hass ,'light', DOMAIN, climate_config , config)
 
     async_track_state_change_event(hass, 'sensor.gryf_in', wrapped_state_changed)
     async_track_state_change_event(hass, 'switch.gryf_rst', reset_event)
+
+    await setup_devices(hass)
 
     async_track_time_interval(hass, lambda now: async_while(hass), timedelta(seconds=59))
     system_off()

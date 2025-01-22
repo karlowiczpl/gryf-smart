@@ -1,5 +1,7 @@
 from homeassistant.components.climate.const import HVACMode , HVACAction 
 
+from enum import Enum
+
 DOMAIN = "gryf_smart"
 
 CONF_TILT = "tilt"
@@ -50,3 +52,8 @@ HELPER_BOOLEAN_ON = "_en_on"
 HELPER_BOOLEAN_OFF = "_en_off"
 HELPER_DATETIME_ON = "_on"
 HELPER_DATETIME_OFF = "_off"
+
+class OUTPUT_STATES(Enum):
+    OFF = "2"
+    ON = "1"
+    TOGGLE = "3"

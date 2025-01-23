@@ -1,3 +1,4 @@
+from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers import config_validation as cv
 from homeassistant.core import HomeAssistant
@@ -18,6 +19,7 @@ from .climate import new_climate_temp , new_climate_out
 from .update_states import setup_update_states
 from .harmonogram import async_while , system_off
 from .devices import setup_devices
+from .coordinator import _GryfSmartCoordinator
 
 first = True
 conf = None
@@ -92,43 +94,44 @@ def is_empty(input_list):
 
 async def sensor_state_changed(event):
     global first
+    pass
 
-    data = event.data.get('new_state')
-    data = str(data)
-
-    parts = data.split('=')
-    parsed_states = parts[2].split(',')
-    last_state = parsed_states[-1].split(';')
-    parsed_states[-1] = last_state[0]
-    
-    parsed_states = filtr_parsed_states(parsed_states)
-    
-    if first:
-        first = False
-        await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
-
-    _LOGGER.debug("Logger: %s", parsed_states)
-
-    if str(parts[1]) == "O":
-        await new_switch_command(parsed_states)
-        await new_climate_out(parsed_states)
-    
-    if str(parts[1]) == "I":
-        await input_state_relaod(parsed_states)
-        await updateAllStates(parsed_states)
-
-    if str(parts[1]) == "PL":
-        await pl_state_reload(parsed_states)
-
-    if str(parts[1]) == "PS":
-        await ps_state_reload(parsed_states)
-
-    if str(parts[1]) == "T":
-        await temp_reload(parsed_states)
-        await new_climate_temp(parsed_states)
-
-    if str(parts[1]) == "R":
-        await new_rols_command(parsed_states)
+    # data = event.data.get('new_state')
+    # data = str(data)
+    #
+    # parts = data.split('=')
+    # parsed_states = parts[2].split(',')
+    # last_state = parsed_states[-1].split(';')
+    # parsed_states[-1] = last_state[0]
+    #
+    # parsed_states = filtr_parsed_states(parsed_states)
+    #
+    # if first:
+    #     first = False
+    #     await setup_update_states(conf[DOMAIN].get(CONF_ID_COUNT, 0) , conf[DOMAIN].get(CONF_STATES_UPDATE, True))
+    #
+    # _LOGGER.debug("Logger: %s", parsed_states)
+    #
+    # if str(parts[1]) == "O":
+    #     await new_switch_command(parsed_states)
+    #     await new_climate_out(parsed_states)
+   #
+    # if str(parts[1]) == "I":
+    #     await input_state_relaod(parsed_states)
+    #     await updateAllStates(parsed_states)
+    #
+    # if str(parts[1]) == "PL":
+    #     await pl_state_reload(parsed_states)
+    #
+    # if str(parts[1]) == "PS":
+    #     await ps_state_reload(parsed_states)
+    #
+    # if str(parts[1]) == "T":
+    #     await temp_reload(parsed_states)
+    #     await new_climate_temp(parsed_states)
+    #
+    # if str(parts[1]) == "R":
+    #     await new_rols_command(parsed_states)
 
 async def reset_event(event):
     data = event.data.get('new_state')
@@ -139,6 +142,18 @@ async def reset_event(event):
 
 async def async_setup(hass: HomeAssistant, config: dict):
     global conf
+
+    port = "/dev/ttyS0"
+    baudrate = 115200
+    # Tworzenie singletona koordynatora
+    coordinator = _GryfSmartCoordinator(hass, port, baudrate)
+
+    # hass.data[DOMAIN] = coordinator
+    await coordinator.async_refresh()
+
+    hass.data[DOMAIN] = coordinator
+    hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, coordinator.stop_serial_read)
+
 
     conf = config
 

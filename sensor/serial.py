@@ -47,37 +47,38 @@ class SerialSensor(SensorEntity):
         return buffer
 
     async def serial_read(self):
-        while True:
-            try:
-                _LOGGER.debug("Opening serial connection on %s", self._port)
-                reader, _ = await serial_asyncio.open_serial_connection(
-                    url=self._port,
-                    baudrate=115200,
-                    bytesize=serial_asyncio.serial.EIGHTBITS,
-                    parity=serial_asyncio.serial.PARITY_NONE,
-                    stopbits=serial_asyncio.serial.STOPBITS_ONE,
-                    xonxoff=False,
-                    rtscts=False,
-                    dsrdtr=False
-                )
-            except SerialException as e:
-                _LOGGER.error("SerialException: %s", e)
-                await self._handle_error()
-            else:
-                while True:
-                    try:
-                        line = await self.custom_readline(reader)
-                        _LOGGER.debug("Received line: %s", line)
-                    except SerialException as e:
-                        _LOGGER.error("SerialException during read: %s", e)
-                        await self._handle_error()
-                        break
-                    else:
-                        line = line.decode("utf-8").strip()
-                        _LOGGER.debug("Decoded line: %s", line)
-                        self._state = line
-                        _LOGGER.debug("State updated to: %s", self._state)
-                        self.async_write_ha_state()
+        pass
+        # while True:
+        #     try:
+        #         _LOGGER.debug("Opening serial connection on %s", self._port)
+        #         reader, _ = await serial_asyncio.open_serial_connection(
+        #             url=self._port,
+        #             baudrate=115200,
+        #             bytesize=serial_asyncio.serial.EIGHTBITS,
+        #             parity=serial_asyncio.serial.PARITY_NONE,
+        #             stopbits=serial_asyncio.serial.STOPBITS_ONE,
+        #             xonxoff=False,
+        #             rtscts=False,
+        #             dsrdtr=False
+        #         )
+        #     except SerialException as e:
+        #         _LOGGER.error("SerialException: %s", e)
+        #         await self._handle_error()
+        #     else:
+        #         while True:
+        #             try:
+        #                 line = await self.custom_readline(reader)
+        #                 _LOGGER.debug("Received line: %s", line)
+        #             except SerialException as e:
+        #                 _LOGGER.error("SerialException during read: %s", e)
+        #                 await self._handle_error()
+        #                 break
+        #             else:
+        #                 line = line.decode("utf-8").strip()
+        #                 _LOGGER.debug("Decoded line: %s", line)
+        #                 self._state = line
+        #                 _LOGGER.debug("State updated to: %s", self._state)
+        #                 self.async_write_ha_state()
 
     async def _handle_error(self):
         self._state = None

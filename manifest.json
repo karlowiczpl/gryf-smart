@@ -3,9 +3,10 @@
     "name": "Gryf Smart Integration",
     "version": "1.0",
     "documentation": "https://github.com/karlowiczpl/gryf-smart",
-    "requirements": ["pyserial-asyncio-fast==0.13"],
+    "requirements": ["pygryfsmart==0.1.3"], 
     "codeowners": ["@karlowiczpl"],
     "iot_class": "local_polling",
     "integration_type": "hub",
-    "loggers": ["custom_components.gryf_smart"]
+    "loggers": ["custom_components.gryf_smart"],
+    "config_flow": "True"
 }

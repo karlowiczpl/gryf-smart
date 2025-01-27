@@ -2,17 +2,37 @@
 
 from __future__ import annotations
 
+from .const import CONF_NAME
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.core import callback
+from homeassistant.helpers.entity import Entity
+from pygryfsmart.api import GryfApi
+from pygryfsmart.const import DriverFunctions
+from .device import _GryfDevice , _GryfOutput
 
-from .coordinator import _GryfSmartCoordinator
+import logging
 
-class _GryfSmartEntity(CoordinatorEntity[_GryfSmartCoordinator]):
-    """Commmon GryfSmart Entity using CoordinatorEntity"""
+_LOGGER = logging.getLogger(__name__)
 
-    _attr_has_entity_name - True
+class _GryfSmartEntityBase(Entity):
+    _attr_should_poll = False
+    _api: GryfApi
 
-    def __init__(
-        self,
-        coordinator: _GryfSmartCoordinator,
-                 ) -> None:
-        pass
+    @property
+    def name(self) -> str:
+        """Returns the name of Gryf Smart device"""
+        return self._device.name
+
+    # @property
+    # def available(self) -> bool:
+    #     return self._api.data
+
+    # async def async_added_to_hass(self) -> None:
+
+class GryfYamlEntity(_GryfSmartEntityBase):
+
+    def __init__(self , device: _GryfDevice , api: GryfApi):
+        self._api = api
+        self._device = device
+        
+

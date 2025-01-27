@@ -4,6 +4,7 @@ from enum import Enum
 
 DOMAIN = "gryf_smart"
 
+CONF_MODULE_COUNT = "module_count"
 CONF_TILT = "tilt"
 CONF_LIGHTS = "lights"
 CONF_BUTTON = "buttons"
@@ -47,11 +48,6 @@ CLIMATE_MAX_TEMP = 35
 
 DEFAULT_HAVAC_MODE = HVACMode.OFF
 DEFAULT_HAVAC_ACTION = HVACAction.IDLE
-
-HELPER_BOOLEAN_ON = "_en_on"
-HELPER_BOOLEAN_OFF = "_en_off"
-HELPER_DATETIME_ON = "_on"
-HELPER_DATETIME_OFF = "_off"
 
 class OUTPUT_STATES(Enum):
     OFF = "2"

@@ -1,0 +1,27 @@
+rules:
+  action-setup: todo
+  appropriate-polling:
+    status: exempt
+    comment: |
+      This integration is push-based.
+  brands: todo
+  common-modules: todo
+  config-flow-test-coverage: todo
+  config-flow: todo
+  dependency-transparency: todo
+  docs-actions: todo
+  docs-high-level-description: todo
+  docs-installation-instructions: todo
+  docs-removal-instructions: todo
+  entity-event-setup: todo
+  entity-unique-id: todo
+  has-entity-name:
+    status: exempt
+  runtime-data:
+    status: exempt
+  test-before-configure:
+    status: exempt
+  test-before-setup: done
+  unique-config-entry:
+    status: done
+    comment: Single config entry.
